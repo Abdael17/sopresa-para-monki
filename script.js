@@ -15,9 +15,9 @@ const ctx = canvas.getContext('2d');
 // --- IMÁGENES ---
 // ¡IMPORTANTE! Asegúrate de que los nombres en tu carpeta assets sean IGUALES a estos:
 const imgYo = new Image();
-imgYo.src = 'assets/yo_caminando.png'; 
+imgYo.src = 'assets/Abdael_caminando.png'; 
 const imgElla = new Image();
-imgElla.src = 'assets/ella_parado.png';
+imgElla.src = 'assets/Beel_parada.png';
 
 // --- ESTADO DEL JUEGO ---
 let gameRunning = false;
@@ -180,3 +180,4 @@ function displayWinMessage() {
     // Detener loop
     gameRunning = false;
 }
+
