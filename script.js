@@ -157,11 +157,18 @@ function loop() {
         }
         ctx.drawImage(imgElla, goal.x, goal.y, goal.width, goal.height);
     } else {
-        // Barra de progreso
+        // --- BARRA DE PROGRESO Y TÍTULO ---
+        // 1. El título que faltaba
+        ctx.fillStyle = "#5a2d3c";
+        ctx.font = "22px 'VT323'";
+        ctx.textAlign = "left";
+        ctx.fillText("Distancia hacia ti...", 50, 18);
+        
+        // 2. La barra (bajada a la posición Y=25 para que se vea bien)
         ctx.fillStyle = "#6d4c41"; // Fondo barra
-        ctx.fillRect(50, 20, 200, 15);
+        ctx.fillRect(50, 25, 200, 15);
         ctx.fillStyle = "#d32f2f"; // Relleno barra
-        ctx.fillRect(50, 20, (distance / GAME_DURATION) * 200, 15);
+        ctx.fillRect(50, 25, (distance / GAME_DURATION) * 200, 15);
     }
 
     frame++;
@@ -181,3 +188,4 @@ function displayWinMessage() {
     
     gameRunning = false;
 }
+
