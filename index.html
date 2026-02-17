@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Una Sorpresa Para Ti ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="splash-screen">
+        <div class="heart-beat">❤️</div>
+        <h1>Tengo una sorpresa para ti...</h1>
+        <button id="start-btn">Ver Sorpresa</button>
+    </div>
+
+    <div id="main-content" class="hidden">
+        
+        <audio id="bg-music" loop>
+            <source src="assets/Canción1.mp3" type="audio/mpeg">
+            Tu navegador no soporta el audio.
+        </audio>
+
+        <section id="game-section">
+            <h2>Nuestra Aventura</h2>
+            <canvas id="gameCanvas" width="800" height="300"></canvas>
+            <p class="instruction">¡Toca o presiona ESPACIO para saltar hacia mí!</p>
+        </section>
+
+        <section id="letter-section">
+            <div class="paper">
+                <h2>Para mi persona favorita</h2>
+                <p>
+                    Aquí escribirás tu mensaje personalizado. Puedes contarle 
+                    por qué decidiste programar esto para ella. 
+                    Eres el "Player 1" de mi vida...
+                </p>
+                <p class="signature">Con amor, [Abdael]</p>
+            </div>
+        </section>
+
+        <section id="gallery-section">
+            <h2>Nuestros Momentos</h2>
+            <div class="gallery-grid">
+                <img src="assets/Nosotros1.jpg" alt="Nosotros">
+                <img src="assets/Nosotros.jpg" alt="Juntos">
+            </div>
+        </section>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
