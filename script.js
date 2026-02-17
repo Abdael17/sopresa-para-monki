@@ -1,6 +1,6 @@
 // --- CONFIGURACIÓN ---
 const MOVEMENT_SPEED = 5;
-const JUMP_FORCE = -14; // Ajustado para el nuevo peso visual
+const JUMP_FORCE = -14;
 const GRAVITY = 0.6;
 const GAME_DURATION = 1500;
 const GROUND_Y = 200; 
@@ -13,9 +13,11 @@ const music = document.getElementById('bg-music');
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
-// --- IMÁGENES ---
+// --- IMÁGENES (CON TUS NOMBRES REALES) ---
 const imgYo = new Image();
-imgYo.src = 'assets/Abdael_caminando.png';
+// Asegúrate de que en GitHub se llamen EXACTAMENTE así (mayúsculas importan)
+imgYo.src = 'assets/Abdael_caminando.png'; 
+
 const imgElla = new Image();
 imgElla.src = 'assets/Beel_parada.png';
 
@@ -25,13 +27,12 @@ let gameWon = false;
 let frame = 0;
 let distance = 0;
 
-// --- TAMAÑO DE LOS PERSONAJES (CORREGIDO) ---
-// Tu imagen es 1536x1024 (Proporción 1.5 : 1)
-// Usaremos esa misma proporción para que no se deformen:
-const CHAR_HEIGHT = 80;        // Altura fija
-const CHAR_WIDTH = 120;        // 80 * 1.5 = 120 (Mantiene la forma exacta)
+// --- TAMAÑO CORREGIDO (Proporción 1.5 : 1) ---
+// Basado en tu resolución 1536x1024
+const CHAR_HEIGHT = 80;        
+const CHAR_WIDTH = 120; // 80 * 1.5 = 120 (Se verán anchos y bien proporcionados)
 
-// JUGADOR (TÚ)
+// JUGADOR (Abdael)
 let player = {
     x: 50,
     y: GROUND_Y - CHAR_HEIGHT,
@@ -41,7 +42,7 @@ let player = {
     grounded: false
 };
 
-// META (ELLA)
+// META (Beel)
 let goal = {
     x: canvas.width + 100,
     y: GROUND_Y - CHAR_HEIGHT,
@@ -103,7 +104,6 @@ function loop() {
     if (!gameWon) distance++;
 
     // --- OBSTÁCULOS ---
-    // Ajustamos la aparición de obstáculos para que no sea imposible
     if (frame % 150 === 0 && distance < GAME_DURATION && !gameWon) {
         obstacles.push({ x: canvas.width, y: GROUND_Y - 40, width: 40, height: 40 });
     }
@@ -112,13 +112,13 @@ function loop() {
         let obs = obstacles[i];
         obs.x -= MOVEMENT_SPEED;
         ctx.fillStyle = "#ff4d6d";
-        ctx.font = "40px Arial"; // Corazón más grande
+        ctx.font = "40px Arial"; 
         ctx.fillText("💔", obs.x, obs.y + 40);
 
-        // Colisión (Hitbox ajustada para ser más permisiva)
+        // Colisión (Hitbox ajustada)
         if (
-            player.x + 20 < obs.x + obs.width && // Margen izquierdo
-            player.x + player.width - 20 > obs.x && // Margen derecho
+            player.x + 30 < obs.x + obs.width && 
+            player.x + player.width - 30 > obs.x && 
             player.y + 20 < obs.y + obs.height &&
             player.y + player.height > obs.y
         ) {
@@ -130,13 +130,13 @@ function loop() {
     // --- DIBUJAR JUGADOR ---
     let spriteY = player.y;
     if (player.grounded && frame % 10 < 5) {
-        spriteY -= 2;
+        spriteY -= 2; // Rebote al caminar
     }
     ctx.drawImage(imgYo, player.x, spriteY, player.width, player.height);
 
     // --- VICTORIA ---
     if (distance >= GAME_DURATION) {
-        if (goal.x > player.x + player.width - 20) { 
+        if (goal.x > player.x + player.width - 40) { // Acercarse hasta tocarse
             goal.x -= 2;
         } else {
             gameWon = true;
@@ -144,6 +144,7 @@ function loop() {
         }
         ctx.drawImage(imgElla, goal.x, goal.y, goal.width, goal.height);
     } else {
+        // Barra de progreso
         ctx.fillStyle = "#5a2d3c";
         ctx.fillRect(50, 20, 200, 10);
         ctx.fillStyle = "#ff4d6d";
@@ -167,5 +168,3 @@ function displayWinMessage() {
     
     gameRunning = false;
 }
-
-
