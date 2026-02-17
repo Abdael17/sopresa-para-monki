@@ -1,0 +1,126 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'VT323', monospace; /* Fuente estilo videojuego */
+    background-color: #ffdde1; /* Rosa suave */
+    color: #5a2d3c;
+    text-align: center;
+    overflow-x: hidden;
+}
+
+/* PANTALLA DE INICIO */
+#splash-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: #000;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    transition: opacity 1s ease;
+}
+
+#splash-screen h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+
+#start-btn {
+    padding: 15px 30px;
+    font-size: 1.5rem;
+    font-family: 'VT323', monospace;
+    background-color: #ff4d6d;
+    color: white;
+    border: 4px solid #fff;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+#start-btn:hover {
+    transform: scale(1.1);
+    background-color: #ff002f;
+}
+
+.heart-beat {
+    font-size: 4rem;
+    animation: heartbeat 1s infinite;
+}
+
+@keyframes heartbeat {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+/* OCULTAR ELEMENTOS */
+.hidden {
+    display: none;
+}
+
+/* JUEGO */
+#game-section {
+    padding: 20px;
+    background: linear-gradient(to bottom, #87CEEB 0%, #E0F7FA 100%); /* Cielo */
+}
+
+canvas {
+    background-color: transparent;
+    border-bottom: 4px solid #5a2d3c; /* El suelo */
+    max-width: 100%;
+}
+
+/* CARTA */
+#letter-section {
+    padding: 40px 20px;
+    background-color: #fff0f3;
+}
+
+.paper {
+    background: #fff;
+    width: 90%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 40px;
+    box-shadow: 10px 10px 0px rgba(0,0,0,0.1);
+    border: 1px solid #ddd;
+    font-size: 1.5rem;
+    line-height: 1.6;
+}
+
+.signature {
+    text-align: right;
+    margin-top: 30px;
+    font-weight: bold;
+    color: #ff4d6d;
+}
+
+/* GALERÍA */
+#gallery-section {
+    padding: 40px;
+}
+
+.gallery-grid {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.gallery-grid img {
+    width: 300px;
+    height: 300px;
+    object-fit: cover;
+    border: 4px solid #fff;
+    box-shadow: 5px 5px 15px rgba(0,0,0,0.2);
+    border-radius: 10px;
+}
