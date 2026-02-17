@@ -3,7 +3,7 @@ const MOVEMENT_SPEED = 5;
 const JUMP_FORCE = -14;
 const GRAVITY = 0.6;
 const GAME_DURATION = 1500;
-const GROUND_Y = 200; 
+const GROUND_Y = 200; // La línea invisible donde pisan
 
 // --- ELEMENTOS DEL DOM ---
 const splashScreen = document.getElementById('splash-screen');
@@ -13,9 +13,9 @@ const music = document.getElementById('bg-music');
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
-// --- IMÁGENES (CON TUS NOMBRES REALES) ---
+// --- IMÁGENES ---
 const imgYo = new Image();
-// Asegúrate de que en GitHub se llamen EXACTAMENTE así (mayúsculas importan)
+// IMPORTANTE: Mantén los nombres que SÍ te funcionaron
 imgYo.src = 'assets/Abdael_caminando.png'; 
 
 const imgElla = new Image();
@@ -27,15 +27,14 @@ let gameWon = false;
 let frame = 0;
 let distance = 0;
 
-// --- TAMAÑO CORREGIDO (Proporción 1.5 : 1) ---
-// Basado en tu resolución 1536x1024
+// --- TAMAÑO (Proporción 1.5 : 1) ---
 const CHAR_HEIGHT = 80;        
-const CHAR_WIDTH = 120; // 80 * 1.5 = 120 (Se verán anchos y bien proporcionados)
+const CHAR_WIDTH = 120; 
 
 // JUGADOR (Abdael)
 let player = {
     x: 50,
-    y: GROUND_Y - CHAR_HEIGHT,
+    y: GROUND_Y - CHAR_HEIGHT, // Pies justo en la línea
     width: CHAR_WIDTH,
     height: CHAR_HEIGHT,
     dy: 0,
@@ -89,6 +88,12 @@ function loop() {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    // --- DIBUJAR SUELO (La parte que faltaba) ---
+    ctx.fillStyle = "#6d4c41"; // Marrón estilo tierra
+    // Dibuja un rectángulo desde la línea del suelo hacia abajo
+    ctx.fillRect(0, GROUND_Y, canvas.width, canvas.height - GROUND_Y);
+
+
     // --- FÍSICA ---
     player.dy += GRAVITY;
     player.y += player.dy;
@@ -104,6 +109,7 @@ function loop() {
     if (!gameWon) distance++;
 
     // --- OBSTÁCULOS ---
+    // Generamos un bloque cuadrado
     if (frame % 150 === 0 && distance < GAME_DURATION && !gameWon) {
         obstacles.push({ x: canvas.width, y: GROUND_Y - 40, width: 40, height: 40 });
     }
@@ -111,17 +117,24 @@ function loop() {
     for (let i = 0; i < obstacles.length; i++) {
         let obs = obstacles[i];
         obs.x -= MOVEMENT_SPEED;
-        ctx.fillStyle = "#ff4d6d";
-        ctx.font = "40px Arial"; 
-        ctx.fillText("💔", obs.x, obs.y + 40);
 
-        // Colisión (Hitbox ajustada)
+        // --- DIBUJAR OBSTÁCULO (BLOQUE) ---
+        ctx.fillStyle = "#d32f2f"; // Rojo intenso
+        ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+        // Borde blanco para que resalte
+        ctx.strokeStyle = "#ffffff";
+        ctx.lineWidth = 2;
+        ctx.strokeRect(obs.x, obs.y, obs.width, obs.height);
+
+
+        // Colisión (Hitbox ajustada para el bloque)
         if (
             player.x + 30 < obs.x + obs.width && 
             player.x + player.width - 30 > obs.x && 
-            player.y + 20 < obs.y + obs.height &&
+            player.y + 10 < obs.y + obs.height &&
             player.y + player.height > obs.y
         ) {
+            // Efecto de choque (pantalla roja momentánea)
             ctx.fillStyle = "rgba(255, 0, 0, 0.3)";
             ctx.fillRect(0,0,canvas.width, canvas.height);
         }
@@ -136,7 +149,7 @@ function loop() {
 
     // --- VICTORIA ---
     if (distance >= GAME_DURATION) {
-        if (goal.x > player.x + player.width - 40) { // Acercarse hasta tocarse
+        if (goal.x > player.x + player.width - 40) { 
             goal.x -= 2;
         } else {
             gameWon = true;
@@ -145,10 +158,10 @@ function loop() {
         ctx.drawImage(imgElla, goal.x, goal.y, goal.width, goal.height);
     } else {
         // Barra de progreso
-        ctx.fillStyle = "#5a2d3c";
-        ctx.fillRect(50, 20, 200, 10);
-        ctx.fillStyle = "#ff4d6d";
-        ctx.fillRect(50, 20, (distance / GAME_DURATION) * 200, 10);
+        ctx.fillStyle = "#6d4c41"; // Fondo barra
+        ctx.fillRect(50, 20, 200, 15);
+        ctx.fillStyle = "#d32f2f"; // Relleno barra
+        ctx.fillRect(50, 20, (distance / GAME_DURATION) * 200, 15);
     }
 
     frame++;
@@ -159,7 +172,7 @@ function displayWinMessage() {
     ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
     ctx.fillRect(40, 40, 720, 220);
     
-    ctx.fillStyle = "#ff002f";
+    ctx.fillStyle = "#d32f2f";
     ctx.font = "60px 'VT323'";
     ctx.textAlign = "center";
     ctx.fillText("¡Te encontré!", canvas.width/2, canvas.height/2 - 10);
