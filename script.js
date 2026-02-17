@@ -1,8 +1,9 @@
 // --- CONFIGURACIÓN ---
 const MOVEMENT_SPEED = 5;
-const JUMP_FORCE = -12;
+const JUMP_FORCE = -14; // Ajustado para el nuevo peso visual
 const GRAVITY = 0.6;
-const GAME_DURATION = 1500; // Cuánto "camino" recorre antes de llegar a ella (aprox 20-30 seg)
+const GAME_DURATION = 1500;
+const GROUND_Y = 200; 
 
 // --- ELEMENTOS DEL DOM ---
 const splashScreen = document.getElementById('splash-screen');
@@ -13,34 +14,39 @@ const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
 // --- IMÁGENES ---
-// ¡IMPORTANTE! Asegúrate de que los nombres en tu carpeta assets sean IGUALES a estos:
 const imgYo = new Image();
-imgYo.src = 'assets/Abdael_caminando.png'; 
+imgYo.src = 'assets/yo_caminando.png';
 const imgElla = new Image();
-imgElla.src = 'assets/Beel_parada.png';
+imgElla.src = 'assets/ella_parado.png';
 
 // --- ESTADO DEL JUEGO ---
 let gameRunning = false;
 let gameWon = false;
 let frame = 0;
-let distance = 0; // Distancia recorrida
+let distance = 0;
+
+// --- TAMAÑO DE LOS PERSONAJES (CORREGIDO) ---
+// Tu imagen es 1536x1024 (Proporción 1.5 : 1)
+// Usaremos esa misma proporción para que no se deformen:
+const CHAR_HEIGHT = 80;        // Altura fija
+const CHAR_WIDTH = 120;        // 80 * 1.5 = 120 (Mantiene la forma exacta)
 
 // JUGADOR (TÚ)
 let player = {
     x: 50,
-    y: 200, // Altura del suelo
-    width: 50, // Ajusta según tus sprites
-    height: 50,
-    dy: 0, // Velocidad vertical
+    y: GROUND_Y - CHAR_HEIGHT,
+    width: CHAR_WIDTH,
+    height: CHAR_HEIGHT,
+    dy: 0,
     grounded: false
 };
 
-// META (ELLA) - Inicialmente fuera de pantalla
+// META (ELLA)
 let goal = {
-    x: canvas.width + 100, // Empieza lejos
-    y: 200,
-    width: 50,
-    height: 50
+    x: canvas.width + 100,
+    y: GROUND_Y - CHAR_HEIGHT,
+    width: CHAR_WIDTH,
+    height: CHAR_HEIGHT
 };
 
 // OBSTÁCULOS
@@ -58,7 +64,7 @@ startBtn.addEventListener('click', () => {
     }, 1000);
 });
 
-// CONTROLES (Salto)
+// CONTROLES
 function jump() {
     if (player.grounded && gameRunning && !gameWon) {
         player.dy = JUMP_FORCE;
@@ -68,14 +74,10 @@ function jump() {
 window.addEventListener('keydown', (e) => {
     if (e.code === 'Space' || e.code === 'ArrowUp') jump();
 });
-canvas.addEventListener('touchstart', (e) => {
-    e.preventDefault(); // Evitar scroll
-    jump();
-});
+canvas.addEventListener('touchstart', (e) => { e.preventDefault(); jump(); });
 canvas.addEventListener('click', jump);
 
-
-// 2. BUCLE PRINCIPAL DEL JUEGO
+// 2. BUCLE PRINCIPAL
 function startGame() {
     gameRunning = true;
     loop();
@@ -84,81 +86,68 @@ function startGame() {
 function loop() {
     if (!gameRunning) return;
 
-    // Limpiar canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // --- LÓGICA DE FÍSICA ---
-    
-    // Gravedad
+    // --- FÍSICA ---
     player.dy += GRAVITY;
     player.y += player.dy;
 
     // Colisión con el suelo
-    if (player.y > 200) { // 200 es la altura del piso
-        player.y = 200;
+    let sueloJugador = GROUND_Y - player.height;
+    if (player.y > sueloJugador) {
+        player.y = sueloJugador;
         player.dy = 0;
         player.grounded = true;
     }
 
-    // Aumentar distancia
     if (!gameWon) distance++;
 
     // --- OBSTÁCULOS ---
-    // Generar obstáculo cada 150 frames (aprox 2.5 seg)
+    // Ajustamos la aparición de obstáculos para que no sea imposible
     if (frame % 150 === 0 && distance < GAME_DURATION && !gameWon) {
-        obstacles.push({ x: canvas.width, y: 210, width: 30, height: 30, type: 'heart' });
+        obstacles.push({ x: canvas.width, y: GROUND_Y - 40, width: 40, height: 40 });
     }
 
-    // Mover y dibujar obstáculos
     for (let i = 0; i < obstacles.length; i++) {
         let obs = obstacles[i];
         obs.x -= MOVEMENT_SPEED;
-
-        // Dibujar obstáculo (Corazón roto o bloque)
         ctx.fillStyle = "#ff4d6d";
-        ctx.font = "30px Arial";
-        ctx.fillText("💔", obs.x, obs.y + 20); 
+        ctx.font = "40px Arial"; // Corazón más grande
+        ctx.fillText("💔", obs.x, obs.y + 40);
 
-        // Colisión (Perder)
+        // Colisión (Hitbox ajustada para ser más permisiva)
         if (
-            player.x < obs.x + obs.width &&
-            player.x + player.width > obs.x &&
-            player.y < obs.y + obs.height &&
+            player.x + 20 < obs.x + obs.width && // Margen izquierdo
+            player.x + player.width - 20 > obs.x && // Margen derecho
+            player.y + 20 < obs.y + obs.height &&
             player.y + player.height > obs.y
         ) {
-            // Si choca, solo rebotamos un poco (no queremos que pierda y se frustre en su sorpresa jaja)
-            // O puedes hacer que pierda puntos. Por ahora, solo visual:
             ctx.fillStyle = "rgba(255, 0, 0, 0.3)";
             ctx.fillRect(0,0,canvas.width, canvas.height);
         }
     }
 
     // --- DIBUJAR JUGADOR ---
-    // Pequeño efecto de "caminar" saltando frames
     let spriteY = player.y;
     if (player.grounded && frame % 10 < 5) {
-        spriteY -= 2; // Rebote al caminar
+        spriteY -= 2;
     }
     ctx.drawImage(imgYo, player.x, spriteY, player.width, player.height);
 
-    // --- CONDICIÓN DE VICTORIA ---
+    // --- VICTORIA ---
     if (distance >= GAME_DURATION) {
-        // Acercar a la novia
-        if (goal.x > player.x + 60) {
-            goal.x -= 2; // Ella entra en escena
+        if (goal.x > player.x + player.width - 20) { 
+            goal.x -= 2;
         } else {
-            // LLEGASTE!
             gameWon = true;
             displayWinMessage();
         }
         ctx.drawImage(imgElla, goal.x, goal.y, goal.width, goal.height);
     } else {
-        // Barra de progreso
         ctx.fillStyle = "#5a2d3c";
         ctx.fillRect(50, 20, 200, 10);
         ctx.fillStyle = "#ff4d6d";
         ctx.fillRect(50, 20, (distance / GAME_DURATION) * 200, 10);
-        ctx.fillText("Distancia hacia ti...", 50, 15);
     }
 
     frame++;
@@ -166,18 +155,16 @@ function loop() {
 }
 
 function displayWinMessage() {
-    // Dibujar corazón gigante
-    ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
-    ctx.fillRect(50, 50, 700, 200);
+    ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
+    ctx.fillRect(40, 40, 720, 220);
     
     ctx.fillStyle = "#ff002f";
-    ctx.font = "40px 'VT323'";
+    ctx.font = "60px 'VT323'";
     ctx.textAlign = "center";
-    ctx.fillText("¡Te encontré!", canvas.width/2, canvas.height/2);
-    ctx.font = "20px 'VT323'";
-    ctx.fillText("(Baja para leer tu carta)", canvas.width/2, canvas.height/2 + 40);
+    ctx.fillText("¡Te encontré!", canvas.width/2, canvas.height/2 - 10);
+    ctx.font = "30px 'VT323'";
+    ctx.fillText("(Baja para leer tu carta)", canvas.width/2, canvas.height/2 + 50);
     
-    // Detener loop
     gameRunning = false;
 }
 
