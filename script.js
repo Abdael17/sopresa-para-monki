@@ -448,10 +448,10 @@ function gameOver() {
     ctx.fillStyle = "#ff4d6d";
     ctx.textAlign = "center";
     ctx.font = "60px 'VT323'";
-    ctx.fillText("💔 GAME OVER 💔", canvas.width/2, canvas.height/2 - 20);
+    ctx.fillText("PERDISTE MI MONITA 😿", canvas.width/2, canvas.height/2 - 20);
     ctx.fillStyle = "white";
     ctx.font = "30px 'VT323'";
-    ctx.fillText("¡No te rindas! Ella te espera.", canvas.width/2, canvas.height/2 + 30);
+    ctx.fillText("¡No te rindas! Quiero encontra mi monki", canvas.width/2, canvas.height/2 + 30);
     ctx.fillStyle = "#ffff00";
     ctx.fillText("[ Presiona 'R' para Reintentar ]", canvas.width/2, canvas.height/2 + 80);
     window.addEventListener('keydown', restartGame);
@@ -602,6 +602,7 @@ audioPlayer.addEventListener('ended', nextSong); // Cuando acaba una, sigue la o
 // Cargar la primera canción al iniciar (sin reproducir aún)
 loadSong(playlist[currentSongIndex]);
 audioPlayer.volume = 0.5; // Volumen al 50%
+
 
 
 
