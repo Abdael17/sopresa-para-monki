@@ -399,5 +399,16 @@ white-space: nowrap !important;
     object-fit: cover; /* Esto hace que el video se recorte bien sin deformarse */
 }
 
+/* --- CORRECCIÓN DE ENFOQUE EN GALERÍA --- */
+/* Esto le dice a las fotos dentro de la galería que se enfoquen a la derecha */
+.photo-gallery .photo-frame img {
+    /* "right center" significa: enfoca el lado derecho horizontalmente, 
+       pero mantente centrado verticalmente. */
+    object-position: right center !important;
+    
+    /* Si aún corta mucho, puedes probar con porcentajes específicos como:
+    object-position: 80% 50% !important; 
+    (Cuanto mayor el primer número, más a la derecha se mueve) */
+}
 
 
