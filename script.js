@@ -81,17 +81,54 @@ let shootingStar = {
 };
 
 // --- PLATAFORMAS ---
-let platforms = [
-    { x: 400, y: GROUND_Y - 80, w: 150, h: 20 },
-    { x: 650, y: GROUND_Y - 180, w: 150, h: 20 },
-    { x: 1000, y: GROUND_Y - 180, w: 300, h: 20 },
-    { x: 1500, y: GROUND_Y - 100, w: 100, h: 20 },
-    { x: 1700, y: GROUND_Y - 220, w: 100, h: 20 },
-    { x: 1950, y: GROUND_Y - 320, w: 100, h: 20 },
-    { x: 2300, y: GROUND_Y - 200, w: 150, h: 20 },
-    { x: 2550, y: GROUND_Y - 320, w: 150, h: 20 },
-    { x: 2750, y: GROUND_Y - 450, w: 200, h: 20 }
+// --- SISTEMA DE NIVELES ---
+let currentLevel = 0; // Empezamos en el nivel 0
+
+// Aquí diseñamos tus mapas. (Fíjate que uso 'w' y 'h' como en tu código)
+const levels = [
+    // --- NIVEL 1: El comienzo ---
+    [
+        { x: 400, y: GROUND_Y - 80, w: 150, h: 20 },
+        { x: 700, y: GROUND_Y - 160, w: 150, h: 20 },
+        { x: 1000, y: GROUND_Y - 240, w: 200, h: 20 } 
+    ],
+    
+    // --- NIVEL 2: Más difícil ---
+    [
+        { x: 200, y: GROUND_Y - 100, w: 100, h: 20 },
+        { x: 500, y: GROUND_Y - 250, w: 100, h: 20 }, /* Salto alto */
+        { x: 800, y: GROUND_Y - 150, w: 100, h: 20 },
+        { x: 1100, y: GROUND_Y - 300, w: 100, h: 20 } /* La cima */
+    ]
 ];
+
+// Cargamos el primer nivel en la variable que usa el juego
+let platforms = levels[currentLevel];
+
+// --- DETECTOR DE FINAL DE NIVEL ---
+    
+    // Si el jugador llega al borde derecho (Meta)
+    if (player.x > canvas.width - 50) {
+        
+        // ¿Quedan niveles?
+        if (currentLevel < levels.length - 1) {
+            // ¡Siguiente nivel! 🚀
+            currentLevel++;
+            platforms = levels[currentLevel]; // Carga el mapa nuevo
+            player.x = 50; // Te regresa al inicio (izquierda)
+            console.log("¡Nivel " + (currentLevel + 1) + " desbloqueado!");
+            
+        } else {
+            // ¡GANASTE EL JUEGO! 🏆
+            // Aquí puedes poner una alerta o detener el juego
+            if (!alert("¡TE ENCONTRE! ❤️ Mi monkilina")) {
+                 // Reiniciar al nivel 1 si acepta
+                 currentLevel = 0;
+                 platforms = levels[currentLevel];
+                 player.x = 50;
+            }
+        }
+    }
 
 // --- ENEMIGOS ---
 let enemies = [
@@ -602,6 +639,7 @@ audioPlayer.addEventListener('ended', nextSong); // Cuando acaba una, sigue la o
 // Cargar la primera canción al iniciar (sin reproducir aún)
 loadSong(playlist[currentSongIndex]);
 audioPlayer.volume = 0.5; // Volumen al 50%
+
 
 
 
