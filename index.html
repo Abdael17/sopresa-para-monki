@@ -72,7 +72,29 @@
             <canvas id="gameCanvas" width="800" height="450"></canvas>
             <p class="instruction">(Usa W-A-D para moverte) 🙊</p>
         </section>
+<div class="music-player">
+    
+    <div class="song-info">
+        <img src="assets/Cover.jpg" alt="Portada" id="cover-img">
+        <div class="song-text">
+            <h4 id="song-title">Cargando...</h4>
+            <p id="song-artist">Para ti ❤️</p>
+        </div>
+    </div>
 
+    <div class="controls">
+        <button id="prev-btn" class="ctrl-btn">⏮️</button>
+        <button id="play-btn" class="ctrl-btn main-btn">▶️</button>
+        <button id="next-btn" class="ctrl-btn">⏭️</button>
+    </div>
+
+    <div class="progress-container">
+        <input type="range" id="progress-bar" value="0" min="0" max="100">
+    </div>
+
+    <audio id="audio-player"></audio>
+</div>
+        
     <div class="letter-section">
         <h2>Para mi persona favorita</h2>
         <p>
@@ -98,6 +120,7 @@
     <script src="script.js?v=3409"></script>
 </body>
 </html>
+
 
 
 
