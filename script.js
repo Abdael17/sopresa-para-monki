@@ -1,8 +1,8 @@
 // --- CONFIGURACIÓN ---
 const SPEED = 6;
-const JUMP_FORCE = -16; // Un poco más fuerte para llegar alto
+const JUMP_FORCE = -16; 
 const GRAVITY = 0.8;
-const GROUND_Y = 400;   // Bajamos el suelo (coordenada Y) para dar espacio arriba
+const GROUND_Y = 400;   
 const LEVEL_LENGTH = 3000;
 const MAX_HEALTH = 3;
 
@@ -22,7 +22,7 @@ imgYoParado.src = 'assets/Abdael_parado.png';
 const imgElla = new Image();
 imgElla.src = 'assets/Beel_parada.png';
 const imgEnemigo = new Image();
-imgEnemigo.src = 'assets/Monoconpistola.png';
+imgEnemigo.src = 'assets/Monoconpistola.jpg';
 
 // --- ESTADO DEL JUEGO ---
 let gameRunning = false;
@@ -39,7 +39,7 @@ let cameraX = 0;
 let cameraY = 0;
 
 // JUGADOR
-const BASE_WIDTH = 100;  // Tamaño original
+const BASE_WIDTH = 100;
 const BASE_HEIGHT = 70;
 
 let player = {
@@ -52,28 +52,23 @@ let player = {
     facingRight: true
 };
 
-// META (Muy arriba, requiere parkour)
+// --- META (AJUSTADA A LOS PIES) ---
+// Restamos la altura del personaje para que quede justo encima
 let goal = {
     x: LEVEL_LENGTH - 150,
-    y: GROUND_Y - 450, // ¡Muy alto!
+    y: (GROUND_Y - 450) - BASE_HEIGHT, 
     width: BASE_WIDTH,
     height: BASE_HEIGHT
 };
 
-// --- PLATAFORMAS (PARKOUR) ---
+// --- PLATAFORMAS ---
 let platforms = [
     { x: 400, y: GROUND_Y - 80, w: 150, h: 20 },
     { x: 650, y: GROUND_Y - 180, w: 150, h: 20 },
-    
-    // El puente
     { x: 1000, y: GROUND_Y - 180, w: 300, h: 20 },
-    
-    // Escalada difícil
     { x: 1500, y: GROUND_Y - 100, w: 100, h: 20 },
     { x: 1700, y: GROUND_Y - 220, w: 100, h: 20 },
     { x: 1950, y: GROUND_Y - 320, w: 100, h: 20 },
-
-    // La cima
     { x: 2300, y: GROUND_Y - 200, w: 150, h: 20 },
     { x: 2550, y: GROUND_Y - 320, w: 150, h: 20 },
     { x: 2750, y: GROUND_Y - 450, w: 200, h: 20 }
@@ -82,7 +77,7 @@ let platforms = [
 // --- ENEMIGOS ---
 let enemies = [
     { x: 500, y: GROUND_Y - 60, w: 60, h: 60, startX: 500, range: 100, speed: 2, dir: 1 },
-    { x: 1100, y: GROUND_Y - 240, w: 60, h: 60, startX: 1100, range: 150, speed: 3, dir: 1 }, // Mono en plataforma
+    { x: 1100, y: GROUND_Y - 240, w: 60, h: 60, startX: 1100, range: 150, speed: 3, dir: 1 },
     { x: 1800, y: GROUND_Y - 60, w: 60, h: 60, startX: 1800, range: 200, speed: 4, dir: 1 },
     { x: 2400, y: GROUND_Y - 60, w: 60, h: 60, startX: 2400, range: 100, speed: 2, dir: -1 }
 ];
@@ -138,7 +133,7 @@ function loop() {
     // 3. COLISIONES
     player.grounded = false;
 
-    // Suelo base (Infinito hacia abajo)
+    // Suelo
     if (player.y + player.height >= GROUND_Y) {
         player.y = GROUND_Y - player.height;
         player.dy = 0;
@@ -146,7 +141,7 @@ function loop() {
     }
 
     // Plataformas
-    if (player.dy > 0) { // Solo si cae
+    if (player.dy > 0) { 
         for (let p of platforms) {
             if (
                 player.x + 10 < p.x + p.w &&
@@ -161,16 +156,10 @@ function loop() {
         }
     }
 
-    // 4. CÁMARA INTELIGENTE (X e Y)
-    // Centrar jugador en X
+    // 4. CÁMARA
     cameraX = player.x - 200;
     if (cameraX < 0) cameraX = 0;
-    
-    // Centrar jugador en Y (para ver hacia arriba)
-    // El +100 es para que el jugador no esté justo en el centro, sino un poco más abajo
     cameraY = player.y - (canvas.height / 2) + 100;
-    
-    // Limitar cámara para no ver debajo del suelo (más allá de GROUND_Y + margen)
     if (cameraY > GROUND_Y - canvas.height + 50) {
         cameraY = GROUND_Y - canvas.height + 50;
     }
@@ -178,27 +167,21 @@ function loop() {
     // --- DIBUJAR ---
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.save();
-    ctx.translate(-cameraX, -cameraY); // Mover todo el mundo
+    ctx.translate(-cameraX, -cameraY);
 
-    // FONDO (Cielo)
-    // Dibujamos un rectángulo gigante para cubrir todo el movimiento de cámara
-    ctx.fillStyle = "#87CEEB"; // Azul cielo original
-    ctx.fillRect(cameraX, cameraY, canvas.width, canvas.height); // Fondo fijo relativo a cámara
-
-    // SUELO (Tierra)
+    // Fondo y Plataformas
+    ctx.fillStyle = "#87CEEB";
+    ctx.fillRect(cameraX, cameraY, canvas.width, canvas.height);
     ctx.fillStyle = "#6d4c41";
-    ctx.fillRect(0, GROUND_Y, LEVEL_LENGTH + 800, 1000); // Suelo muy profundo
-
-    // PLATAFORMAS
+    ctx.fillRect(0, GROUND_Y, LEVEL_LENGTH + 800, 1000);
     ctx.fillStyle = "#5d4037";
     for (let p of platforms) {
         ctx.fillRect(p.x, p.y, p.w, p.h);
         ctx.strokeStyle = "#3e2723";
-        ctx.lineWidth = 2;
         ctx.strokeRect(p.x, p.y, p.w, p.h);
     }
 
-    // ENEMIGOS
+    // Enemigos
     for (let en of enemies) {
         en.x += en.speed * en.dir;
         if (en.x > en.startX + en.range) en.dir = -1;
@@ -218,7 +201,6 @@ function loop() {
             ctx.fillStyle = "red"; ctx.fillRect(en.x, en.y, en.w, en.h);
         }
 
-        // Colisión Daño
         if (!invulnerable && !gameWon) {
             if (
                 player.x + 20 < en.x + en.w &&
@@ -231,11 +213,18 @@ function loop() {
         }
     }
 
-    // JUGADOR
+    // --- CORRECCIÓN PANTALLA DE MUERTE ---
+    // Si gameRunning se volvió false dentro de takeDamage (porque moriste),
+    // DEJAMOS DE DIBUJAR inmediatamente para no tapar la pantalla negra.
+    if (!gameRunning) {
+        ctx.restore();
+        return; 
+    }
+
+    // Jugador
     if (gameRunning) {
         let spriteY = player.y;
         let imagenAUsar = moving ? imgYoCaminando : imgYoParado;
-        
         if (!invulnerable || frame % 10 < 5) {
             if (!player.facingRight) {
                 ctx.save();
@@ -249,24 +238,25 @@ function loop() {
         }
     }
 
-    // META
+    // Meta
     ctx.drawImage(imgElla, goal.x, goal.y, goal.width, goal.height);
     ctx.fillStyle = "#d32f2f";
-    ctx.font = "20px 'VT323'";
-    ctx.fillText("¡Amor!", goal.x + 20, goal.y - 10);
+    ctx.font = "bold 20px 'VT323'";
+    ctx.textAlign = "center";
+    ctx.fillText("¡Amor!", goal.x + goal.width/2, goal.y - 15);
 
-    ctx.restore(); // Fin de la cámara
+    ctx.restore();
 
-    // --- UI FIJA (Vida) ---
+    // UI
+    ctx.textAlign = "left";
     ctx.fillStyle = "black";
     ctx.font = "24px 'VT323'";
     ctx.fillText("VIDA:", 20, 40);
     for (let i = 0; i < health; i++) {
-        // Corazones
         ctx.fillText("❤️", 70 + (i * 30), 40);
     }
 
-    // CHECK VICTORIA
+    // Victoria
     if (player.x >= goal.x - 50 && player.y < goal.y + 100) {
         gameWon = true;
         displayWinMessage();
@@ -279,21 +269,17 @@ function loop() {
 function takeDamage() {
     health--;
     invulnerable = true;
-    player.dy = -8; // Pequeño salto al herirse
-    player.x -= 40; // Empuje atrás
+    player.dy = -8;
+    player.x -= 40;
     
-    // --- EFECTO DE ENCOGIMIENTO ---
-    // Calculamos el nuevo tamaño basado en la vida restante
-    // Vida 3: 100% | Vida 2: 75% | Vida 1: 50%
+    // Encogerse
     let scaleFactor = 0.5 + (0.5 * (health / MAX_HEALTH));
-    
-    // Aplicar nuevo tamaño
     player.width = BASE_WIDTH * scaleFactor;
     player.height = BASE_HEIGHT * scaleFactor;
 
     // Flash rojo
     ctx.fillStyle = "rgba(255, 0, 0, 0.5)";
-    ctx.fillRect(0,0, canvas.width, canvas.height);
+    ctx.fillRect(cameraX, cameraY, canvas.width, canvas.height);
 
     if (health <= 0) {
         gameOver();
@@ -303,13 +289,17 @@ function takeDamage() {
 }
 
 function gameOver() {
-    gameRunning = false;
+    gameRunning = false; // Detiene el bucle
     
-    // Pantalla de Perdida
-    ctx.fillStyle = "rgba(0, 0, 0, 0.85)"; // Fondo oscuro casi negro
+    // DIBUJAR PANTALLA NEGRA
+    // Usamos resetTransform para asegurarnos de que cubra toda la pantalla
+    // sin importar dónde esté la cámara
+    ctx.setTransform(1, 0, 0, 1, 0, 0); 
+    
+    ctx.fillStyle = "rgba(0, 0, 0, 0.9)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     
-    ctx.fillStyle = "#ff4d6d"; // Texto rojizo
+    ctx.fillStyle = "#ff4d6d";
     ctx.textAlign = "center";
     ctx.font = "60px 'VT323'";
     ctx.fillText("💔 GAME OVER 💔", canvas.width/2, canvas.height/2 - 20);
@@ -318,10 +308,10 @@ function gameOver() {
     ctx.font = "30px 'VT323'";
     ctx.fillText("¡No te rindas! Ella te espera.", canvas.width/2, canvas.height/2 + 30);
     
-    // Efecto de parpadeo en el texto de reinicio
-    ctx.fillStyle = "#ffff00"; // Amarillo
+    ctx.fillStyle = "#ffff00";
     ctx.fillText("[ Presiona 'R' para Reintentar ]", canvas.width/2, canvas.height/2 + 80);
 
+    // Activar reinicio
     window.addEventListener('keydown', restartGame);
 }
 
@@ -329,22 +319,21 @@ function restartGame(e) {
     if (e.key === 'r' || e.key === 'R') {
         window.removeEventListener('keydown', restartGame);
         
-        // REINICIAR TODO
+        // RESETEAR TODO
         player.x = 50;
         player.y = GROUND_Y - BASE_HEIGHT;
         health = MAX_HEALTH;
-        
-        // Restaurar tamaño original
         player.width = BASE_WIDTH;
         player.height = BASE_HEIGHT;
         
         invulnerable = false;
-        gameRunning = true;
+        gameRunning = true; // Arranca el bucle de nuevo
         loop();
     }
 }
 
 function displayWinMessage() {
+    ctx.setTransform(1, 0, 0, 1, 0, 0); // Resetear cámara para el mensaje
     ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "#d32f2f";
@@ -354,4 +343,3 @@ function displayWinMessage() {
     ctx.font = "30px 'VT323'";
     ctx.fillText("(Baja para leer tu carta)", canvas.width/2, canvas.height/2 + 40);
 }
-
