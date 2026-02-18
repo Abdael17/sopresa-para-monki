@@ -478,44 +478,44 @@ function restartGame(e) {
 
 const playlist = [
     {
-        title: "Nuestra Canción Especial", // Cambia este texto si quieres
-        artist: "Artista Favorito",
+        title: "Yellow", // Cambia este texto si quieres
+        artist: "Coldplay",
         src: "assets/Canción.mp3",  // OJO: Tiene tilde
         cover: "assets/Cover.jpg"
     },
     {
-        title: "Recuerdo Bonito",
-        artist: "Artista 2",
+        title: "Those eyes",
+        artist: "New west",
         src: "assets/Canción1.mp3",
         cover: "assets/Cover1.jpg"
     },
     {
-        title: "Para Bailar",
-        artist: "Artista 3",
+        title: "My kind of woman",
+        artist: "Mac Demarco",
         src: "assets/Canción2.mp3",
         cover: "assets/Cover2.jpg"
     },
     {
-        title: "Momento Romántico",
-        artist: "Artista 4",
+        title: "The Scientist",
+        artist: "Coldplay",
         src: "assets/Canción3.mp3",
         cover: "assets/Cover3.jpg"
     },
     {
-        title: "Nuestra Aventura",
-        artist: "Artista 5",
+        title: "Something about you",
+        artist: "Eyedress",
         src: "assets/Canción4.mp3",
         cover: "assets/Cover4.jpg"
     },
     {
-        title: "Siempre Juntos",
-        artist: "Artista 6",
+        title: "Compass",
+        artist: "The Neighbourhood",
         src: "assets/Canción5.mp3",
         cover: "assets/Cover5.jpg"
     },
     {
-        title: "Final Perfecto",
-        artist: "Artista 7",
+        title: "Just The Way You Are",
+        artist: "Bruno Mars",
         src: "assets/Canción6.mp3",
         cover: "assets/Cover6.jpg"
     }
@@ -602,5 +602,6 @@ audioPlayer.addEventListener('ended', nextSong); // Cuando acaba una, sigue la o
 // Cargar la primera canción al iniciar (sin reproducir aún)
 loadSong(playlist[currentSongIndex]);
 audioPlayer.volume = 0.5; // Volumen al 50%
+
 
 
