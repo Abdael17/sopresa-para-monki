@@ -398,3 +398,7 @@ white-space: nowrap !important;
     object-fit: cover; /* Esto hace que el video se recorte bien sin deformarse */
 }
 
+.container {
+    /* Aumentamos esto para tener espacio de sobra abajo */
+    padding-bottom: 300px !important; 
+}
