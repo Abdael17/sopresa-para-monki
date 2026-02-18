@@ -1,9 +1,9 @@
 // --- CONFIGURACIÓN ---
-const SPEED = 7;           // Velocidad al correr
-const JUMP_FORCE = -16;    // Fuerza del salto
+const SPEED = 7;           
+const JUMP_FORCE = -16;    
 const GRAVITY = 0.8;
-const GROUND_Y = 200;      // Altura del suelo
-const LEVEL_LENGTH = 4000; // Largo total del nivel (la meta está al final)
+const GROUND_Y = 200;      
+const LEVEL_LENGTH = 4000; 
 
 // --- ELEMENTOS HTML ---
 const splashScreen = document.getElementById('splash-screen');
@@ -14,14 +14,17 @@ const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
 // --- IMÁGENES ---
-const imgYo = new Image();
-imgYo.src = 'assets/Abdael_caminando.png'; // Tu sprite
+const imgYoCaminando = new Image();
+imgYoCaminando.src = 'assets/Abdael_caminando.png'; 
+
+const imgYoParado = new Image();
+imgYoParado.src = 'assets/Abdael_parado.png'; // ¡NUEVO!
 
 const imgElla = new Image();
-imgElla.src = 'assets/Beel_parada.png';     // Sprite de ella
+imgElla.src = 'assets/Beel_parada.png';     
 
 const imgObstaculo = new Image();
-imgObstaculo.src = 'assets/Monoconpistola.png'; // ¡EL MONO! 🐵🔫
+imgObstaculo.src = 'assets/Monoconpistola.jpg'; 
 
 // --- ESTADO DEL JUEGO ---
 let gameRunning = false;
@@ -35,7 +38,7 @@ const keys = {
     d: false
 };
 
-// CÁMARA (Para que te siga)
+// CÁMARA
 let cameraX = 0;
 
 // JUGADOR
@@ -49,10 +52,10 @@ let player = {
     height: CHAR_HEIGHT,
     dy: 0,
     grounded: false,
-    facingRight: true // Para saber hacia dónde mira
+    facingRight: true 
 };
 
-// META (Ella te espera al final del nivel)
+// META 
 let goal = {
     x: LEVEL_LENGTH - 200,
     y: GROUND_Y - CHAR_HEIGHT,
@@ -60,8 +63,7 @@ let goal = {
     height: CHAR_HEIGHT
 };
 
-// OBSTÁCULOS (Generados en posiciones fijas del mapa)
-// Aquí definimos dónde están los monos. Puedes agregar más a la lista.
+// OBSTÁCULOS
 let obstacles = [
     { x: 600, y: GROUND_Y - 60, width: 60, height: 60 },
     { x: 1200, y: GROUND_Y - 60, width: 60, height: 60 },
@@ -70,7 +72,7 @@ let obstacles = [
     { x: 3200, y: GROUND_Y - 60, width: 60, height: 60 }
 ];
 
-// --- LISTENERS DE TECLADO (WASD y Flechas) ---
+// --- LISTENERS ---
 window.addEventListener('keydown', (e) => {
     if (e.key === 'w' || e.key === 'W' || e.key === 'ArrowUp' || e.code === 'Space') keys.w = true;
     if (e.key === 'a' || e.key === 'A' || e.key === 'ArrowLeft') keys.a = true;
@@ -103,21 +105,23 @@ function startGame() {
 function loop() {
     if (!gameRunning) return;
 
-    // 1. MOVIMIENTO HORIZONTAL
+    // 1. MOVIMIENTO
+    let moving = false; // Variable para saber si nos movemos
     if (keys.d) {
         player.x += SPEED;
         player.facingRight = true;
+        moving = true;
     }
     if (keys.a) {
         player.x -= SPEED;
         player.facingRight = false;
+        moving = true;
     }
 
-    // Límites del mapa (No salir del inicio ni del final)
     if (player.x < 0) player.x = 0;
     if (player.x > LEVEL_LENGTH) player.x = LEVEL_LENGTH;
 
-    // 2. SALTO (FÍSICA)
+    // 2. FÍSICA
     if (keys.w && player.grounded) {
         player.dy = JUMP_FORCE;
         player.grounded = false;
@@ -126,7 +130,6 @@ function loop() {
     player.dy += GRAVITY;
     player.y += player.dy;
 
-    // Colisión suelo
     let sueloJugador = GROUND_Y - player.height;
     if (player.y > sueloJugador) {
         player.y = sueloJugador;
@@ -134,87 +137,84 @@ function loop() {
         player.grounded = true;
     }
 
-    // 3. CÁMARA (Sigue al jugador)
-    // La cámara intenta centrar al jugador en la pantalla
-    // cameraX es el punto "cero" del dibujo
+    // 3. CÁMARA
     cameraX = player.x - 200; 
-    // Evitar que la cámara muestre el vacío a la izquierda
     if (cameraX < 0) cameraX = 0;
 
     // --- DIBUJAR ---
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Guardar contexto para aplicar la cámara
     ctx.save();
-    // Movemos "el mundo" hacia la izquierda según avance la cámara
     ctx.translate(-cameraX, 0);
 
     // SUELO
     ctx.fillStyle = "#6d4c41";
-    // El suelo debe ser tan largo como el nivel
     ctx.fillRect(0, GROUND_Y, LEVEL_LENGTH + 800, canvas.height - GROUND_Y);
 
-    // OBSTÁCULOS (EL MONO)
+    // OBSTÁCULOS
     for (let obs of obstacles) {
-        // Dibujar imagen del mono en lugar del cuadro rojo
-        ctx.drawImage(imgObstaculo, obs.x, obs.y, obs.width, obs.height);
+        if (imgObstaculo.complete) {
+             ctx.drawImage(imgObstaculo, obs.x, obs.y, obs.width, obs.height);
+        } else {
+             ctx.fillStyle = "red";
+             ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+        }
 
-        // Colisión simple
         if (
             player.x + 40 < obs.x + obs.width &&
             player.x + player.width - 40 > obs.x &&
             player.y + 20 < obs.y + obs.height &&
             player.y + player.height > obs.y
         ) {
-            // Choque: Pequeño rebote hacia atrás
             player.x -= 20; 
             ctx.fillStyle = "rgba(255, 0, 0, 0.5)";
-            ctx.fillRect(cameraX, 0, canvas.width, canvas.height); // Flash rojo
+            ctx.fillRect(cameraX, 0, canvas.width, canvas.height); 
         }
     }
 
-    // META (ELLA)
+    // META
     ctx.drawImage(imgElla, goal.x, goal.y, goal.width, goal.height);
-    // Texto sobre ella
     ctx.fillStyle = "#d32f2f";
     ctx.font = "20px 'VT323'";
     ctx.fillText("¡Amor!", goal.x + 20, goal.y - 10);
 
-    // JUGADOR
+    // --- DIBUJAR JUGADOR (Lógica de animación) ---
     let spriteY = player.y;
-    // Animación simple de rebote al caminar
-    if ((keys.a || keys.d) && player.grounded && Math.floor(frame / 5) % 2 === 0) {
-        spriteY -= 3;
+    
+    // Elegimos qué imagen usar
+    let imagenAUsar;
+    if (moving) {
+        imagenAUsar = imgYoCaminando;
+        // Efecto rebote solo si camina
+        if (player.grounded && Math.floor(frame / 5) % 2 === 0) {
+            spriteY -= 3;
+        }
+    } else {
+        imagenAUsar = imgYoParado; // Si no se mueve, usa la foto quieto
     }
     
-    // Invertir imagen si va a la izquierda
+    // Dibujamos con espejo si mira a la izquierda
     if (!player.facingRight) {
         ctx.save();
         ctx.translate(player.x + player.width, spriteY);
-        ctx.scale(-1, 1); // Espejo
-        ctx.drawImage(imgYo, 0, 0, player.width, player.height);
+        ctx.scale(-1, 1); 
+        ctx.drawImage(imagenAUsar, 0, 0, player.width, player.height);
         ctx.restore();
     } else {
-        ctx.drawImage(imgYo, player.x, spriteY, player.width, player.height);
+        ctx.drawImage(imagenAUsar, player.x, spriteY, player.width, player.height);
     }
 
-    // Restaurar contexto (para dibujar la interfaz fija)
     ctx.restore();
 
-    // --- INTERFAZ FIJA (BARRA DE PROGRESO) ---
-    // Esto se dibuja SIN el desplazamiento de cámara
+    // INTERFAZ
     let progress = Math.min(player.x / (goal.x), 1);
-    
     ctx.fillStyle = "#5a2d3c";
     ctx.fillText("Distancia a tu corazón...", 50, 30);
-    
     ctx.fillStyle = "#6d4c41";
     ctx.fillRect(50, 40, 200, 15);
-    
     ctx.fillStyle = "#d32f2f";
     ctx.fillRect(50, 40, progress * 200, 15);
 
-    // --- VICTORIA ---
+    // VICTORIA
     if (player.x >= goal.x - 50) {
         gameWon = true;
         displayWinMessage();
@@ -225,16 +225,12 @@ function loop() {
 }
 
 function displayWinMessage() {
-    // Fondo semitransparente
     ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
     ctx.fillStyle = "#d32f2f";
     ctx.textAlign = "center";
     ctx.font = "60px 'VT323'";
     ctx.fillText("¡Te encontré!", canvas.width/2, canvas.height/2 - 20);
-    
     ctx.font = "30px 'VT323'";
     ctx.fillText("(Baja para leer tu carta)", canvas.width/2, canvas.height/2 + 40);
 }
-
