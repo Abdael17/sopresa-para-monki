@@ -473,3 +473,134 @@ function restartGame(e) {
         loop();
     }
 }
+
+// ==========================================
+// REPRODUCTOR DE MÚSICA (LISTA DE 7)
+// ==========================================
+
+const playlist = [
+    {
+        title: "Nuestra Canción Especial", // Cambia este texto si quieres
+        artist: "Artista Favorito",
+        src: "assets/Canción.mp3",  // OJO: Tiene tilde
+        cover: "assets/Cover.jpg"
+    },
+    {
+        title: "Recuerdo Bonito",
+        artist: "Artista 2",
+        src: "assets/Canción1.mp3",
+        cover: "assets/Cover1.jpg"
+    },
+    {
+        title: "Para Bailar",
+        artist: "Artista 3",
+        src: "assets/Canción2.mp3",
+        cover: "assets/Cover2.jpg"
+    },
+    {
+        title: "Momento Romántico",
+        artist: "Artista 4",
+        src: "assets/Canción3.mp3",
+        cover: "assets/Cover3.jpg"
+    },
+    {
+        title: "Nuestra Aventura",
+        artist: "Artista 5",
+        src: "assets/Canción4.mp3",
+        cover: "assets/Cover4.jpg"
+    },
+    {
+        title: "Siempre Juntos",
+        artist: "Artista 6",
+        src: "assets/Canción5.mp3",
+        cover: "assets/Cover5.jpg"
+    },
+    {
+        title: "Final Perfecto",
+        artist: "Artista 7",
+        src: "assets/Canción6.mp3",
+        cover: "assets/Cover6.jpg"
+    }
+];
+
+let currentSongIndex = 0;
+
+// Referencias al HTML
+const audioPlayer = document.getElementById('audio-player');
+const playBtn = document.getElementById('play-btn');
+const prevBtn = document.getElementById('prev-btn');
+const nextBtn = document.getElementById('next-btn');
+const progressBar = document.getElementById('progress-bar');
+const songTitle = document.getElementById('song-title');
+const songArtist = document.getElementById('song-artist');
+const coverImg = document.getElementById('cover-img');
+
+// 1. Función Cargar Canción
+function loadSong(song) {
+    songTitle.innerText = song.title;
+    songArtist.innerText = song.artist;
+    audioPlayer.src = song.src;
+    coverImg.src = song.cover;
+}
+
+// 2. Función Play/Pausa
+function togglePlay() {
+    if (audioPlayer.paused) {
+        audioPlayer.play();
+        playBtn.innerText = "⏸️"; // Icono Pausa
+        // Animación de giro en la foto (Opcional)
+        coverImg.style.transform = "rotate(3deg) scale(1.1)";
+    } else {
+        audioPlayer.pause();
+        playBtn.innerText = "▶️"; // Icono Play
+        coverImg.style.transform = "rotate(0deg) scale(1)";
+    }
+}
+
+// 3. Siguiente Canción
+function nextSong() {
+    currentSongIndex++;
+    if (currentSongIndex > playlist.length - 1) {
+        currentSongIndex = 0; // Vuelve a la primera
+    }
+    loadSong(playlist[currentSongIndex]);
+    audioPlayer.play();
+    playBtn.innerText = "⏸️";
+}
+
+// 4. Canción Anterior
+function prevSong() {
+    currentSongIndex--;
+    if (currentSongIndex < 0) {
+        currentSongIndex = playlist.length - 1; // Va a la última
+    }
+    loadSong(playlist[currentSongIndex]);
+    audioPlayer.play();
+    playBtn.innerText = "⏸️";
+}
+
+// 5. Barra de Progreso
+function updateProgress(e) {
+    const { duration, currentTime } = e.srcElement;
+    if (duration) {
+        const progressPercent = (currentTime / duration) * 100;
+        progressBar.value = progressPercent;
+    }
+}
+
+// 6. Mover la barra (Adelantar/Retroceder)
+progressBar.addEventListener('input', () => {
+    const duration = audioPlayer.duration;
+    audioPlayer.currentTime = (progressBar.value / 100) * duration;
+});
+
+// Event Listeners
+playBtn.addEventListener('click', togglePlay);
+nextBtn.addEventListener('click', nextSong);
+prevBtn.addEventListener('click', prevSong);
+audioPlayer.addEventListener('timeupdate', updateProgress);
+audioPlayer.addEventListener('ended', nextSong); // Cuando acaba una, sigue la otra
+
+// Cargar la primera canción al iniciar (sin reproducir aún)
+loadSong(playlist[currentSongIndex]);
+audioPlayer.volume = 0.5; // Volumen al 50%
