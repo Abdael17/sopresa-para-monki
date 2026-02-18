@@ -5,28 +5,22 @@
 body {
     margin: 0;
     padding: 0;
-    /* --- NUEVO FONDO: NOCHE PROFUNDA (Igual al juego) --- */
-    /* Degradado suave desde el azul oscuro del cielo del juego hacia negro */
-    background: linear-gradient(to bottom, #0f172a, #0a0a14, #000000);
-    /* Fijamos el fondo para que no se mueva al hacer scroll */
+    /* Fondo: Noche profunda romántica */
+    background: linear-gradient(to bottom, #0f172a, #1a0b2e, #3a1c33);
     background-attachment: fixed;
     font-family: 'VT323', monospace;
-    /* Color base del texto claro para que se lea en la oscuridad */
     color: #e0e0e0;
-    /* SOLUCIÓN AL DESCUADRE: */
-    /* Usamos display block normal para que el contenido fluya hacia abajo */
-    display: block;
-    text-align: center; /* Centra todo el contenido por defecto */
+    text-align: center;
+    min-height: 100vh;
 }
 
-/* --- PANTALLA DE INICIO (MISTERIO ANTES DE LA SORPRESA) --- */
+/* --- PANTALLA DE INICIO --- */
 #splash-screen {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    /* Fondo negro total para la introducción */
     background-color: #000000;
     display: flex;
     flex-direction: column;
@@ -38,8 +32,8 @@ body {
 
 .heart-beat {
     font-size: 100px;
-    color: #ff4d6d; /* Rosa neón */
-    text-shadow: 0 0 25px rgba(255, 77, 109, 0.8); /* Resplandor */
+    color: #ff4d6d;
+    text-shadow: 0 0 30px rgba(255, 77, 109, 0.8);
     animation: heartbeat 1.2s infinite;
 }
 
@@ -67,134 +61,132 @@ body {
 #start-btn:hover {
     background-color: #ff4d6d;
     color: #000;
-    box-shadow: 0 0 40px rgba(255, 77, 109, 0.8);
-    transform: scale(1.05);
+    box-shadow: 0 0 50px rgba(255, 77, 109, 1);
+    transform: scale(1.1);
 }
 
-/* --- CONTENEDOR PRINCIPAL (DESPUÉS DE LA SORPRESA) --- */
-.hidden {
-    display: none;
-}
+/* --- CONTENEDOR PRINCIPAL --- */
+.hidden { display: none; }
 
-/* ESTA ES LA CLAVE PARA QUE NO SE DESCUADRE */
 .container {
-    /* Ancho controlado y centrado automático con márgenes */
     width: 90%;
-    max-width: 850px;
-    margin: 40px auto; /* 40px arriba/abajo, AUTO a los lados lo centra */
-
-    /* Diseño del contenedor para que resalte del fondo oscuro */
-    background: rgba(255, 255, 255, 0.05); /* Caja muy sutil casi transparente */
-    padding: 35px;
+    max-width: 900px;
+    margin: 50px auto; 
+    background: rgba(255, 255, 255, 0.05);
+    padding: 40px;
     border-radius: 20px;
-    /* Borde fino rosa brillante */
-    border: 2px solid rgba(255, 77, 109, 0.5);
-    /* Sombra profunda para dar efecto 3D */
-    box-shadow: 0 0 60px rgba(0, 0, 0, 0.9);
+    border: 1px solid rgba(255, 77, 109, 0.3);
+    box-shadow: 0 0 60px rgba(0, 0, 0, 0.8);
 }
 
-/* --- TEXTOS Y TÍTULOS --- */
+/* --- TÍTULOS --- */
 h1, h2, h3 {
-    /* Sombra rosa para que brillen en la noche */
     text-shadow: 0 0 15px rgba(255, 77, 109, 0.7);
     margin-bottom: 25px;
     letter-spacing: 3px;
 }
-
-h1 {
-    font-size: 65px;
-    color: #fff; /* Blanco brillante */
-}
-
-h2 {
-    font-size: 45px;
-    margin-top: 50px;
-    color: #ff99ac; /* Rosa claro */
+h1 { font-size: 70px; color: #fff; }
+h2 { 
+    font-size: 45px; margin-top: 60px; color: #ff99ac;
     border-bottom: 2px dashed rgba(255, 77, 109, 0.5);
-    display: inline-block;
-    padding-bottom: 10px;
+    display: inline-block; padding-bottom: 10px;
 }
-
-h3 {
-    font-size: 28px;
-    color: #ffccd5;
-    margin-top: -15px;
-}
+h3 { font-size: 28px; color: #ffccd5; }
 
 /* --- ÁREA DEL JUEGO --- */
 #game-container {
-    margin: 30px auto;
-    /* Borde brillante que enmarca el juego */
+    display: block; 
+    margin: 30px auto; 
+    width: fit-content;
     border: 4px solid #ff4d6d;
-    box-shadow: 0 0 40px rgba(255, 77, 109, 0.4);
-    display: inline-block;
+    box-shadow: 0 0 40px rgba(255, 77, 109, 0.5);
     border-radius: 4px;
 }
 
 canvas {
-    background: #0f172a; /* Color de fondo de carga (igual al cielo) */
+    background: #0f172a;
     display: block;
 }
 
-/* --- SECCIÓN DE LA CARTA --- */
+/* =========================================
+   NUEVO DISEÑO DE CARTA REALISTA
+   ========================================= */
 .letter-section {
-    margin-top: 50px;
-    padding: 40px;
-    /* Fondo de papel oscuro y transparente */
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 15px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    /* Centrado y ancho de hoja de papel */
+    max-width: 700px;
+    margin: 60px auto;
+    
+    /* Color papel crema */
+    background-color: #fffaf0;
+    
+    /* Espaciado interno generoso */
+    padding: 50px 40px;
+    
+    /* Borde doble elegante color rosa */
+    border: 4px double #ff4d6d;
+    
+    /* Sombra suave para que parezca despegada del fondo */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    
+    /* Bordes apenas redondeados */
+    border-radius: 2px;
+    
+    /* Alineación izquierda como carta real */
+    text-align: left;
+
+    /* (Opcional) Simulación sutil de renglones */
+    background-image: linear-gradient(to bottom, rgba(255, 77, 109, 0.05) 1px, transparent 1px);
+    background-size: 100% 35px; 
 }
 
-p {
-    font-size: 24px;
-    color: #f0f0f0; /* Blanco hueso para leer cómodamente */
-    line-height: 1.6;
-    text-align: left; /* Texto de carta alineado a la izquierda */
+/* --- TEXTO DENTRO DE LA CARTA (TINTA OSCURA) --- */
+/* Usamos este selector específico para que solo afecte a la carta */
+.letter-section p {
+    font-size: 26px;
+    /* Color de tinta oscura (marrón rojizo) para leer en fondo claro */
+    color: #5a2d3c;
+    line-height: 1.8;
+    /* Quitamos la sombra del texto anterior */
+    text-shadow: none;
+    margin-bottom: 25px;
 }
+/* ========================================= */
 
-/* --- GALERÍA DE FOTOS --- */
+
+/* --- FOTOS TIPO POLAROID --- */
 .photo-gallery {
     display: flex;
     justify-content: center;
     gap: 30px;
-    margin-top: 50px;
-    flex-wrap: wrap; /* Permite que bajen si no caben */
+    margin-top: 60px; /* Un poco más de espacio con la carta */
+    flex-wrap: wrap;
 }
 
 .photo-frame {
     background: #fff;
-    padding: 12px 12px 30px 12px; /* Estilo Polaroid (más espacio abajo) */
-    box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-    transform: rotate(-3deg);
+    padding: 12px 12px 45px 12px; /* Más espacio abajo (Polaroid) */
+    box-shadow: 5px 5px 15px rgba(0,0,0,0.6);
+    transform: rotate(-2deg);
     transition: all 0.3s ease;
-    width: 200px;
+    width: 220px;
 }
 
 .photo-frame img {
     width: 100%;
     height: auto;
     display: block;
-    border: 1px solid #eee;
-}
-
-.photo-frame:nth-child(even) {
-    transform: rotate(3deg);
+    border: 1px solid #ddd;
 }
 
 .photo-frame:hover {
     transform: scale(1.1) rotate(0deg);
     z-index: 10;
-    box-shadow: 0 0 40px rgba(255, 77, 109, 0.6); /* Resplandor al pasar el mouse */
+    box-shadow: 0 0 40px rgba(255, 77, 109, 0.7);
 }
 
 /* --- PIE DE PÁGINA --- */
 footer {
-    margin: 60px 0 30px 0;
+    margin: 80px 0 30px 0;
     font-size: 18px;
-    color: #aaa;
-}
-    font-size: 20px;
     color: #888;
 }
-
