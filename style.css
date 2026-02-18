@@ -1,43 +1,43 @@
-/* Importamos la fuente pixelada romántica */
+/* Importamos la fuente pixelada */
 @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
 
+/* --- CONFIGURACIÓN GENERAL --- */
 body {
     margin: 0;
     padding: 0;
-    /* --- CAMBIO PRINCIPAL: FONDO DE ATARDECER ROMÁNTICO --- */
-    /* Creamos un degradado vertical: Rosa -> Rosa Atardecer -> Morado Noche */
-    background: linear-gradient(to bottom, #ffc2d1, #ff99ac, #4a1e4e);
-    /* Fijamos el fondo para que no se mueva al hacer scroll */
-    background-attachment: fixed;
-    /* Aseguramos que cubra toda la pantalla */
+    /* --- FONDO DE NOCHE ROMÁNTICA --- */
+    /* Degradado profundo: De azul noche casi negro a un morado romántico abajo */
+    background: linear-gradient(to bottom, #02010a, #1a0b2e, #4a1e4e);
+    background-attachment: fixed; /* El fondo se queda quieto al bajar */
     background-size: cover;
-    /* ------------------------------------------------------- */
     font-family: 'VT323', monospace;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    color: white;
+    /* CORRECCIÓN DE ALINEACIÓN: Quitamos el flex del body para evitar el descuadre */
+    display: block; 
     min-height: 100vh;
 }
 
-/* --- PANTALLA DE INICIO --- */
+/* --- PANTALLA DE INICIO (ANTES DE LA SORPRESA) --- */
 #splash-screen {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(255, 255, 255, 0.95); /* Fondo semi-transparente */
+    /* FONDO NEGRO ELEGANTE (Como pediste) */
+    background-color: #050505; 
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    z-index: 100;
+    z-index: 1000; /* Asegura que esté siempre encima */
     transition: opacity 1s ease-out;
 }
 
 .heart-beat {
     font-size: 100px;
-    color: #ff4d6d;
+    color: #ff4d6d; /* Corazón rosa neón */
+    text-shadow: 0 0 20px rgba(255, 77, 109, 0.6); /* Resplandor */
     animation: heartbeat 1.2s infinite;
 }
 
@@ -50,124 +50,134 @@ body {
 }
 
 #start-btn {
-    margin-top: 30px;
-    padding: 15px 40px;
-    font-size: 30px;
+    margin-top: 40px;
+    padding: 15px 50px;
+    font-size: 35px;
     font-family: 'VT323', monospace;
-    background-color: #ff4d6d;
-    color: white;
-    border: 4px solid #5a2d3c;
+    background-color: transparent;
+    color: #ff4d6d;
+    border: 3px solid #ff4d6d;
     cursor: pointer;
-    transition: transform 0.2s, background-color 0.2s;
-    box-shadow: 0 8px #5a2d3c;
+    transition: all 0.3s;
+    text-shadow: 0 0 10px #ff4d6d;
+    box-shadow: 0 0 10px rgba(255, 77, 109, 0.2);
 }
 
 #start-btn:hover {
-    background-color: #ff758f;
-    transform: translateY(-2px);
-    box-shadow: 0 10px #5a2d3c;
+    background-color: #ff4d6d;
+    color: white;
+    box-shadow: 0 0 30px #ff4d6d;
+    transform: scale(1.1);
 }
 
-#start-btn:active {
-    transform: translateY(4px);
-    box-shadow: 0 4px #5a2d3c;
-}
-
-/* --- CONTENIDO PRINCIPAL --- */
+/* --- CONTENEDOR PRINCIPAL (DESPUÉS DE LA SORPRESA) --- */
 .hidden {
     display: none;
 }
 
+/* Este contenedor centra todo y evita que se descuadre */
 .container {
-    background: rgba(255, 255, 255, 0.9); /* Fondo blanco semi-transparente */
+    width: 90%;
+    max-width: 900px; /* Ancho máximo para que no se vea gigante en PC */
+    margin: 50px auto; /* Centrado automático horizontalmente */
+    background: rgba(20, 10, 30, 0.85); /* Fondo oscuro semitransparente */
     padding: 40px;
     border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    border: 2px solid #ff4d6d; /* Borde neón fino */
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
     text-align: center;
-    max-width: 850px;
-    width: 90%;
-    margin: 20px;
-    border: 4px solid #ff4d6d;
 }
 
+/* --- TEXTOS --- */
 h1, h2, h3 {
-    /* --- CAMBIO: Texto blanco para que resalte en la noche --- */
-    color: #ffffff; 
-    /* Sombra rosa para darle el toque romántico */
-    text-shadow: 3px 3px 0px #ff4d6d, 5px 5px 10px rgba(0,0,0,0.2);
-    margin-bottom: 20px;
+    text-shadow: 2px 2px 0px #000, 0 0 15px rgba(255, 77, 109, 0.5);
+    margin-bottom: 25px;
     letter-spacing: 2px;
 }
 
-h1 { font-size: 60px; }
-h2 { font-size: 45px; margin-top: 40px; }
-h3 { font-size: 35px; color: #ff758f; } /* Subtítulos en rosa claro */
+h1 { 
+    font-size: 70px; 
+    color: #fff0f5; /* Blanco rosado */
+}
+h2 { 
+    font-size: 50px; 
+    margin-top: 50px; 
+    color: #ff99ac;
+    border-bottom: 2px dashed #ff4d6d;
+    display: inline-block;
+    padding-bottom: 10px;
+}
+h3 { font-size: 30px; color: #ffccd5; }
 
 /* --- ÁREA DEL JUEGO --- */
 #game-container {
     margin: 30px auto;
-    border: 5px solid #5a2d3c;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-    display: inline-block; /* Para que el borde se ajuste al canvas */
-}
-canvas {
-    background: #87CEEB; /* Cielo azul por defecto si no carga el JS */
-    display: block;
-    cursor: crosshair;
+    border: 4px solid #fff;
+    box-shadow: 0 0 30px rgba(135, 206, 235, 0.3); /* Resplandor azulado */
+    display: inline-block;
+    max-width: 100%; /* Para que no se salga en móviles */
+    overflow: hidden;
+    border-radius: 4px;
 }
 
-/* --- SECCIÓN DE LA CARTA --- */
+canvas {
+    background: #0f172a; /* Fondo de carga oscuro */
+    display: block;
+}
+
+/* --- CARTA --- */
 .letter-section {
     margin-top: 50px;
-    padding: 30px;
-    background: rgba(255, 240, 245, 0.8); /* Un rosa muy clarito y transparente */
+    padding: 40px;
+    background: rgba(255, 255, 255, 0.1); /* Muy sutil, para leer bien */
     border-radius: 15px;
-    border: 3px dashed #ff4d6d;
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 p {
-    font-size: 24px;
-    /* --- CAMBIO: Texto oscuro para leer bien sobre el papel claro --- */
-    color: #5a2d3c; 
+    font-size: 26px;
+    color: #ffe6ea; /* Texto claro para leer en la noche */
     line-height: 1.6;
-    margin-bottom: 20px;
+    text-shadow: 1px 1px 2px black;
 }
 
 /* --- GALERÍA DE FOTOS --- */
 .photo-gallery {
     display: flex;
     justify-content: center;
-    gap: 20px;
-    margin-top: 30px;
+    gap: 25px;
+    margin-top: 40px;
     flex-wrap: wrap;
 }
 
 .photo-frame {
     background: white;
-    padding: 15px;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    padding: 12px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
     transform: rotate(-3deg);
-    transition: transform 0.3s;
-    border: 2px solid #ff4d6d;
+    transition: transform 0.3s, z-index 0.3s;
+    width: 220px; /* Tamaño fijo para que no se desordenen */
 }
+
+.photo-frame img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border: 1px solid #ddd;
+}
+
 .photo-frame:nth-child(even) {
     transform: rotate(3deg);
 }
 .photo-frame:hover {
-    transform: scale(1.05) rotate(0deg);
-    z-index: 10;
-}
-.photo-frame img {
-    max-width: 250px;
-    height: auto;
-    border: 1px solid #ddd;
-    display: block;
+    transform: scale(1.15) rotate(0deg);
+    z-index: 50;
+    box-shadow: 0 0 30px rgba(255, 77, 109, 0.8);
 }
 
 /* --- PIE DE PÁGINA --- */
 footer {
-    margin-top: 50px;
+    margin: 50px 0 20px 0;
     font-size: 20px;
-    color: #ffffff; /* Texto blanco */
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    color: #888;
 }
