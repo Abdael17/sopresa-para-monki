@@ -25,7 +25,7 @@ const imgElla = new Image();
 imgElla.src = 'assets/Beel_parada.png';
 
 const imgEnemigo = new Image();
-imgEnemigo.src = 'assets/Monoconpistola.jpg'; // Ojo: Mayúscula M y .jpg
+imgEnemigo.src = 'assets/Monoconpistola.png'; // Ojo: Mayúscula M y .jpg
 
 // --- ESTADO DEL JUEGO ---
 let gameRunning = false;
@@ -306,3 +306,4 @@ function displayWinMessage() {
     ctx.font = "30px 'VT323'";
     ctx.fillText("(Baja para leer tu carta)", canvas.width/2, canvas.height/2 + 40);
 }
+
