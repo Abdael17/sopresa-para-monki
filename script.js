@@ -1,5 +1,5 @@
 // --- CONFIGURACIÓN ---
-const SPEED = 6;
+const SPEED = 5;        
 const JUMP_FORCE = -16; 
 const GRAVITY = 0.8;
 const GROUND_Y = 400;   
@@ -52,12 +52,33 @@ let player = {
     facingRight: true
 };
 
-// --- META (BEEL) ---
+// META (BEEL)
 let goal = {
     x: LEVEL_LENGTH - 150,
     y: (GROUND_Y - 450) - BASE_HEIGHT, 
     width: BASE_WIDTH,
     height: BASE_HEIGHT
+};
+
+// --- AMBIENTACIÓN NOCTURNA (ESTRELLAS) ---
+let stars = [];
+// Generamos las estrellas una sola vez
+for (let i = 0; i < 200; i++) {
+    stars.push({
+        x: Math.random() * (LEVEL_LENGTH + 800), // Repartidas por todo el nivel
+        y: Math.random() * 600, // Altura aleatoria
+        size: Math.random() * 2 + 1, // Tamaño variado
+        alpha: Math.random() // Brillo variado
+    });
+}
+
+// Estrella Fugaz
+let shootingStar = {
+    x: 0,
+    y: 0,
+    active: false,
+    speedX: 0,
+    speedY: 0
 };
 
 // --- PLATAFORMAS ---
@@ -75,10 +96,10 @@ let platforms = [
 
 // --- ENEMIGOS ---
 let enemies = [
-    { x: 500, y: GROUND_Y - 60, w: 60, h: 60, startX: 500, range: 100, speed: 2, dir: 1 },
-    { x: 1100, y: GROUND_Y - 240, w: 60, h: 60, startX: 1100, range: 150, speed: 3, dir: 1 },
-    { x: 1800, y: GROUND_Y - 60, w: 60, h: 60, startX: 1800, range: 200, speed: 4, dir: 1 },
-    { x: 2400, y: GROUND_Y - 60, w: 60, h: 60, startX: 2400, range: 100, speed: 2, dir: -1 }
+    { x: 500, y: GROUND_Y - 60, w: 60, h: 60, startX: 500, range: 100, speed: 1, dir: 1 },
+    { x: 1100, y: GROUND_Y - 240, w: 60, h: 60, startX: 1100, range: 150, speed: 2, dir: 1 },
+    { x: 1800, y: GROUND_Y - 60, w: 60, h: 60, startX: 1800, range: 200, speed: 2, dir: 1 },
+    { x: 2400, y: GROUND_Y - 60, w: 60, h: 60, startX: 2400, range: 100, speed: 1, dir: -1 }
 ];
 
 // LISTENERS
@@ -116,7 +137,7 @@ function loop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // ==========================================
-    // MODO BAILE (VICTORIA) 🕺💃
+    // MODO BAILE (VICTORIA)
     // ==========================================
     if (isDancing) {
         performDanceRoutine(); 
@@ -126,7 +147,7 @@ function loop() {
     }
 
     // ==========================================
-    // MODO JUEGO NORMAL 🎮
+    // MODO JUEGO NORMAL
     // ==========================================
 
     // 1. MOVIMIENTO
@@ -179,11 +200,17 @@ function loop() {
         cameraY = GROUND_Y - canvas.height + 50;
     }
 
-    // --- DIBUJAR JUEGO ---
+    // --- DIBUJAR ---
     ctx.save();
+    
+    // Primero dibujamos el fondo ESTÁTICO (La Luna siempre te sigue)
+    drawStaticBackground();
+    
+    // Luego movemos el mundo
     ctx.translate(-cameraX, -cameraY);
 
-    drawScenery();
+    // Dibujamos el escenario (Suelo, Estrellas que se mueven, Plataformas)
+    drawWorldScenery();
 
     // Enemigos
     for (let en of enemies) {
@@ -232,9 +259,9 @@ function loop() {
         }
     }
 
-    // Meta (Beel) - Estática esperando
+    // Meta (Beel)
     ctx.drawImage(imgElla, goal.x, goal.y, goal.width, goal.height);
-    ctx.fillStyle = "#d32f2f";
+    ctx.fillStyle = "#ff4d6d"; // Color rosado para el texto
     ctx.font = "bold 20px 'VT323'";
     ctx.textAlign = "center";
     ctx.fillText("¡Amor!", goal.x + goal.width/2, goal.y - 15);
@@ -244,19 +271,14 @@ function loop() {
     // UI Vida
     drawUI();
 
-    // ========================================================
-    // CORRECCIÓN DEL BUG: ¡EL BUCLE DEBE CONTINUAR!
-    // ========================================================
-    // Si llegas a la meta...
+    // --- CHECK VICTORIA ---
     if (!isDancing && player.x >= goal.x - 60 && player.y < goal.y + 100) {
-        isDancing = true;       // Activamos el baile
-        player.x = goal.x - 80; // Te colocamos en posición
+        isDancing = true;       
+        player.x = goal.x - 80; 
         player.y = goal.y;      
-        // IMPORTANTE: NO usamos 'else'. Dejamos que el código siga
-        // para que ejecute requestAnimationFrame abajo.
     }
 
-    // Avanzar frame y pedir siguiente vuelta SIEMPRE
+    // Siguiente frame
     frame++;
     requestAnimationFrame(loop);
 }
@@ -268,74 +290,133 @@ function performDanceRoutine() {
     let targetCamX = goal.x - (canvas.width / 2) + 50;
     let targetCamY = goal.y - (canvas.height / 2);
     
-    // Suavizado rápido de cámara
     cameraX += (targetCamX - cameraX) * 0.1;
     cameraY += (targetCamY - cameraY) * 0.1;
 
     ctx.save();
+    
+    // Fondo Estático (Luna)
+    drawStaticBackground();
+    
+    // Mundo
     ctx.translate(-cameraX, -cameraY);
-
-    drawScenery();
+    drawWorldScenery(); // Estrellas y plataformas
 
     // Cálculos del Baile
     let jumpOffset = Math.sin(frame * 0.15) * 20; 
     if (jumpOffset > 0) jumpOffset = 0; 
-
-    // Mirar izquierda/derecha (Cambia cada 30 frames)
     let danceDir = Math.floor(frame / 30) % 2 === 0 ? 1 : -1;
 
-    // TÚ (Bailando)
+    // TÚ
     ctx.save();
     let myDrawX = goal.x - 80; 
     let myDrawY = goal.y + jumpOffset;
-    
     ctx.translate(myDrawX + (player.width/2), myDrawY);
     ctx.scale(danceDir, 1); 
     ctx.drawImage(imgYoParado, -player.width/2, 0, player.width, player.height);
     ctx.restore();
 
-    // ELLA (Bailando)
+    // ELLA
     ctx.save();
     let ellaDrawX = goal.x;
     let ellaDrawY = goal.y + jumpOffset;
-    
     ctx.translate(ellaDrawX + (goal.width/2), ellaDrawY);
-    ctx.scale(danceDir * -1, 1); // Espejo
+    ctx.scale(danceDir * -1, 1); 
     ctx.drawImage(imgElla, -goal.width/2, 0, goal.width, goal.height);
     ctx.restore();
 
     ctx.restore(); 
 
     // UI FINAL
-    ctx.fillStyle = "rgba(255, 255, 255, 0.7)";
+    ctx.fillStyle = "rgba(0, 0, 0, 0.5)"; // Fondo oscuro semitransparente
     ctx.fillRect(0, 100, canvas.width, 150);
 
-    ctx.fillStyle = "#d32f2f";
+    ctx.fillStyle = "#ff4d6d";
     ctx.textAlign = "center";
     ctx.font = "60px 'VT323'";
     ctx.fillText("❤️ ¡TE ENCONTRÉ! ❤️", canvas.width/2, 180);
     
+    ctx.fillStyle = "white";
     ctx.font = "30px 'VT323'";
-    ctx.fillStyle = "#5a2d3c";
     ctx.fillText("(Baja para leer tu carta)", canvas.width/2, 230);
 }
 
-function drawScenery() {
-    ctx.fillStyle = "#87CEEB";
-    ctx.fillRect(cameraX, cameraY, canvas.width, canvas.height);
-    ctx.fillStyle = "#6d4c41";
+// --- DIBUJA EL FONDO QUE NO SE MUEVE (CIELO + LUNA) ---
+function drawStaticBackground() {
+    // 1. Cielo de noche
+    ctx.fillStyle = "#0f172a"; // Azul oscuro profundo
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // 2. La Luna (Siempre visible en la esquina)
+    ctx.fillStyle = "#fdf4dc"; // Blanco amarillento
+    ctx.shadowBlur = 20; // Resplandor
+    ctx.shadowColor = "white";
+    ctx.beginPath();
+    ctx.arc(canvas.width - 100, 100, 40, 0, Math.PI * 2); // Luna llena
+    ctx.fill();
+    ctx.shadowBlur = 0; // Quitar resplandor para lo demás
+}
+
+// --- DIBUJA LO QUE ES PARTE DEL MUNDO (Estrellas, Suelo, Plataformas) ---
+function drawWorldScenery() {
+    // 1. Estrellas (Detrás de todo)
+    ctx.fillStyle = "white";
+    for (let s of stars) {
+        ctx.globalAlpha = Math.abs(Math.sin(frame * 0.05 + s.x)); // Titilar
+        ctx.fillRect(s.x, s.y, s.size, s.size);
+    }
+    ctx.globalAlpha = 1.0;
+
+    // 2. Estrella Fugaz
+    drawShootingStar();
+
+    // 3. Suelo
+    ctx.fillStyle = "#1e293b"; // Suelo oscuro azulado
     ctx.fillRect(0, GROUND_Y, LEVEL_LENGTH + 800, 1000);
-    ctx.fillStyle = "#5d4037";
+    // Borde de pasto nocturno
+    ctx.fillStyle = "#064e3b"; // Verde oscuro
+    ctx.fillRect(0, GROUND_Y, LEVEL_LENGTH + 800, 20);
+
+    // 4. Plataformas
+    ctx.fillStyle = "#334155"; // Piedra oscura
     for (let p of platforms) {
         ctx.fillRect(p.x, p.y, p.w, p.h);
-        ctx.strokeStyle = "#3e2723";
+        ctx.strokeStyle = "#94a3b8"; // Borde claro (luz de luna)
         ctx.strokeRect(p.x, p.y, p.w, p.h);
+    }
+}
+
+function drawShootingStar() {
+    // Lógica para iniciar una estrella fugaz aleatoria
+    if (!shootingStar.active) {
+        if (Math.random() < 0.005) { // 0.5% de probabilidad por frame
+            shootingStar.active = true;
+            shootingStar.x = cameraX + Math.random() * canvas.width; // En pantalla
+            shootingStar.y = Math.random() * 200;
+            shootingStar.speedX = -8;
+            shootingStar.speedY = 4;
+        }
+    } else {
+        // Mover
+        shootingStar.x += shootingStar.speedX;
+        shootingStar.y += shootingStar.speedY;
+        
+        // Dibujar cola
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.8)";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(shootingStar.x, shootingStar.y);
+        ctx.lineTo(shootingStar.x + 40, shootingStar.y - 20); // Cola larga
+        ctx.stroke();
+
+        // Desactivar si sale de pantalla o muy abajo
+        if (shootingStar.y > GROUND_Y) shootingStar.active = false;
     }
 }
 
 function drawUI() {
     ctx.textAlign = "left";
-    ctx.fillStyle = "black";
+    ctx.fillStyle = "white"; // Texto blanco para que se vea en la noche
     ctx.font = "24px 'VT323'";
     ctx.fillText("VIDA:", 20, 40);
     for (let i = 0; i < health; i++) {
