@@ -237,110 +237,111 @@ footer {
 .p9 { top: 92%; left: 5%; transform: rotate(4deg); width: 190px; }}
 
 /* =========================================
-   ESTILOS DEL REPRODUCTOR (WIDGET COMPACTO)
+   REPRODUCTOR COMPACTO (WIDGET TIPO TARJETA)
    ========================================= */
 .music-player {
     position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: 8px; /* Menos espacio entre elementos */
-
-    /* MÁRGENES Y TAMAÑO COMPACTO */
-    margin: 30px auto; /* Centrado vertical y horizontalmente */
-    width: 90%;
-    max-width: 380px; /* ¡MUCHO MÁS ESTRECHO! */
     
-    /* Estilo Vidrio */
-    background: rgba(255, 255, 255, 0.1);
+    /* TAMAÑO FIJO Y CENTRADO OBLIGATORIO */
+    width: 350px; /* Ancho fijo, ya no se estira */
+    margin: 20px auto; /* Centrado automático */
+    
+    display: flex;
+    flex-direction: column; /* Apilar elementos verticalmente */
+    gap: 10px;
+    
+    /* Estilo Vidrio Elegante */
+    background: rgba(20, 10, 30, 0.6); /* Fondo oscuro semitransparente */
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     
-    padding: 15px 20px; /* Padding más ajustado */
+    padding: 15px 20px;
     border-radius: 15px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 5px 20px rgba(0,0,0,0.5);
-    z-index: 10;
+    border: 1px solid rgba(255, 77, 109, 0.3); /* Borde rosado sutil */
+    box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+    
+    /* Asegura que esté por encima de las fotos de fondo */
+    z-index: 100;
 }
 
-/* Sección de Info */
+/* 1. Información de la canción (Arriba) */
 .song-info {
     display: flex;
     align-items: center;
     gap: 15px;
-    margin-bottom: 5px;
+    width: 100%; /* Ocupa todo el ancho de la tarjeta */
 }
 
 #cover-img {
-    width: 50px; /* Portada más pequeña */
+    width: 50px;
     height: 50px;
-    border-radius: 6px;
+    border-radius: 8px;
     object-fit: cover;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.5);
-    transition: transform 0.3s;
+    border: 2px solid rgba(255, 255, 255, 0.1);
 }
 
 .song-text {
-    text-align: left;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Texto a la izquierda */
+    overflow: hidden; /* Cortar texto si es muy largo */
 }
 
 .song-text h4 {
     margin: 0;
-    font-size: 18px; /* Texto un poco más pequeño */
+    font-size: 18px;
     color: white;
-    text-shadow: 0 0 10px rgba(255,255,255,0.3);
-    white-space: nowrap; /* Evita que el título ocupe dos líneas */
-    overflow: hidden;
-    text-overflow: ellipsis; /* Pone "..." si es muy largo */
-    max-width: 220px; /* Límite de ancho para el texto */
+    white-space: nowrap;
+    text-shadow: none;
 }
 
 .song-text p {
     margin: 2px 0 0 0;
-    font-size: 14px;
-    color: #ddd;
+    font-size: 13px;
+    color: #ff99ac; /* Artista en rosa claro */
     text-shadow: none;
 }
 
-/* Controles */
+/* 2. Controles (Centro) */
 .controls {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 25px;
-    margin-bottom: 0;
+    gap: 20px;
+    width: 100%;
 }
 
 .ctrl-btn {
     background: none;
     border: none;
-    font-size: 24px; /* Botones un poco más chicos */
+    font-size: 22px;
     cursor: pointer;
-    color: #fff;
+    color: #e0e0e0;
     transition: transform 0.2s;
-    text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    padding: 0;
 }
 
 .ctrl-btn:hover {
-    transform: scale(1.2);
     color: #ff4d6d;
+    transform: scale(1.1);
 }
 
 .main-btn {
-    font-size: 38px; /* Play principal */
+    font-size: 35px; /* Play más grande */
 }
 
-/* Barra de Progreso */
+/* 3. Barra de Progreso (Abajo) */
 .progress-container {
     width: 100%;
     display: flex;
+    align-items: center;
     justify-content: center;
-    margin-top: 5px;
 }
 
 input[type=range] {
     width: 100%;
-    height: 4px; /* Barra más fina */
-    background: rgba(255,255,255,0.2);
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
     border-radius: 2px;
     appearance: none;
     cursor: pointer;
@@ -348,16 +349,14 @@ input[type=range] {
 
 input[type=range]::-webkit-slider-thumb {
     appearance: none;
-    width: 12px; /* Bolita más pequeña */
+    width: 12px;
     height: 12px;
     background: #ff4d6d;
     border-radius: 50%;
     cursor: pointer;
-    box-shadow: 0 0 10px rgba(255, 77, 109, 0.8);
     transition: transform 0.1s;
 }
 
 input[type=range]::-webkit-slider-thumb:hover {
     transform: scale(1.3);
 }
-
