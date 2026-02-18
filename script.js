@@ -119,10 +119,11 @@ startBtn.addEventListener('click', () => {
     setTimeout(() => {
         splashScreen.style.display = 'none';
         mainContent.classList.remove('hidden');
+        audioPlayer.play().catch(error => console.log("Error de reproducción:", error));
+        playBtn.innerText = "⏸️"; 
         startGame();
     }, 1000);
 });
-
 function startGame() {
     gameRunning = true;
     loop();
@@ -601,4 +602,5 @@ audioPlayer.addEventListener('ended', nextSong); // Cuando acaba una, sigue la o
 // Cargar la primera canción al iniciar (sin reproducir aún)
 loadSong(playlist[currentSongIndex]);
 audioPlayer.volume = 0.5; // Volumen al 50%
+
 
