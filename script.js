@@ -26,7 +26,7 @@ imgEnemigo.src = 'assets/Monoconpistola.png';
 
 // --- ESTADO DEL JUEGO ---
 let gameRunning = false;
-let gameWon = false;
+let isDancing = false; // ¡NUEVO ESTADO: BAILE! 🕺💃
 let frame = 0;
 let health = MAX_HEALTH;
 let invulnerable = false;
@@ -52,11 +52,10 @@ let player = {
     facingRight: true
 };
 
-// --- META (AJUSTADA A LOS PIES) ---
-// Restamos la altura del personaje para que quede justo encima
+// --- META (BEEL) ---
 let goal = {
     x: LEVEL_LENGTH - 150,
-    y: (GROUND_Y - 450) - BASE_HEIGHT, 
+    y: (GROUND_Y - 450) - BASE_HEIGHT, // Altura ajustada
     width: BASE_WIDTH,
     height: BASE_HEIGHT
 };
@@ -114,6 +113,22 @@ function startGame() {
 function loop() {
     if (!gameRunning) return;
 
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // ==========================================
+    // MODO BAILE (VICTORIA) 🕺💃
+    // ==========================================
+    if (isDancing) {
+        performDanceRoutine(); // Función especial de baile
+        frame++;
+        requestAnimationFrame(loop);
+        return; // Saltamos la física normal del juego
+    }
+
+    // ==========================================
+    // MODO JUEGO NORMAL 🎮
+    // ==========================================
+
     // 1. MOVIMIENTO
     let moving = false;
     if (keys.d) { player.x += SPEED; player.facingRight = true; moving = true; }
@@ -164,22 +179,12 @@ function loop() {
         cameraY = GROUND_Y - canvas.height + 50;
     }
 
-    // --- DIBUJAR ---
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // --- DIBUJAR JUEGO ---
     ctx.save();
     ctx.translate(-cameraX, -cameraY);
 
-    // Fondo y Plataformas
-    ctx.fillStyle = "#87CEEB";
-    ctx.fillRect(cameraX, cameraY, canvas.width, canvas.height);
-    ctx.fillStyle = "#6d4c41";
-    ctx.fillRect(0, GROUND_Y, LEVEL_LENGTH + 800, 1000);
-    ctx.fillStyle = "#5d4037";
-    for (let p of platforms) {
-        ctx.fillRect(p.x, p.y, p.w, p.h);
-        ctx.strokeStyle = "#3e2723";
-        ctx.strokeRect(p.x, p.y, p.w, p.h);
-    }
+    // Fondo y Escenario
+    drawScenery(); // Función auxiliar para no repetir código
 
     // Enemigos
     for (let en of enemies) {
@@ -201,7 +206,7 @@ function loop() {
             ctx.fillStyle = "red"; ctx.fillRect(en.x, en.y, en.w, en.h);
         }
 
-        if (!invulnerable && !gameWon) {
+        if (!invulnerable) {
             if (
                 player.x + 20 < en.x + en.w &&
                 player.x + player.width - 20 > en.x &&
@@ -213,56 +218,132 @@ function loop() {
         }
     }
 
-    // --- CORRECCIÓN PANTALLA DE MUERTE ---
-    // Si gameRunning se volvió false dentro de takeDamage (porque moriste),
-    // DEJAMOS DE DIBUJAR inmediatamente para no tapar la pantalla negra.
-    if (!gameRunning) {
-        ctx.restore();
-        return; 
-    }
-
     // Jugador
-    if (gameRunning) {
-        let spriteY = player.y;
-        let imagenAUsar = moving ? imgYoCaminando : imgYoParado;
-        if (!invulnerable || frame % 10 < 5) {
-            if (!player.facingRight) {
-                ctx.save();
-                ctx.translate(player.x + player.width, spriteY);
-                ctx.scale(-1, 1);
-                ctx.drawImage(imagenAUsar, 0, 0, player.width, player.height);
-                ctx.restore();
-            } else {
-                ctx.drawImage(imagenAUsar, player.x, spriteY, player.width, player.height);
-            }
+    let spriteY = player.y;
+    let imagenAUsar = moving ? imgYoCaminando : imgYoParado;
+    if (!invulnerable || frame % 10 < 5) {
+        if (!player.facingRight) {
+            ctx.save();
+            ctx.translate(player.x + player.width, spriteY);
+            ctx.scale(-1, 1);
+            ctx.drawImage(imagenAUsar, 0, 0, player.width, player.height);
+            ctx.restore();
+        } else {
+            ctx.drawImage(imagenAUsar, player.x, spriteY, player.width, player.height);
         }
     }
 
-    // Meta
+    // Meta (Beel) - Estática esperando
     ctx.drawImage(imgElla, goal.x, goal.y, goal.width, goal.height);
     ctx.fillStyle = "#d32f2f";
     ctx.font = "bold 20px 'VT323'";
     ctx.textAlign = "center";
     ctx.fillText("¡Amor!", goal.x + goal.width/2, goal.y - 15);
 
+    ctx.restore(); // Fin cámara
+
+    // UI Vida
+    drawUI();
+
+    // CHECK VICTORIA
+    if (player.x >= goal.x - 60 && player.y < goal.y + 100) {
+        isDancing = true; // ACTIVAR BAILE
+        player.x = goal.x - 80; // Ponerse al lado de ella
+        player.y = goal.y; // Misma altura
+    } else {
+        frame++;
+        requestAnimationFrame(loop);
+    }
+}
+
+// ==========================================
+// FUNCIÓN DE BAILE (LO NUEVO) 🎶
+// ==========================================
+function performDanceRoutine() {
+    // 1. Configurar Cámara Centrada en la Pareja
+    let targetCamX = goal.x - (canvas.width / 2) + 50;
+    let targetCamY = goal.y - (canvas.height / 2);
+    
+    // Suavizado simple de cámara
+    cameraX = targetCamX;
+    cameraY = targetCamY;
+
+    ctx.save();
+    ctx.translate(-cameraX, -cameraY);
+
+    // 2. Dibujar Fondo (Cielo, Suelo, Plataformas)
+    drawScenery();
+
+    // 3. Cálculos del Baile
+    // Salto sincronizado (Seno)
+    let jumpOffset = Math.sin(frame * 0.15) * 20; // Saltan 20px arriba y abajo
+    if (jumpOffset > 0) jumpOffset = 0; // Solo saltan hacia arriba (negativo en Y)
+
+    // Mirar izquierda/derecha (cada 30 frames)
+    let danceDir = Math.floor(frame / 30) % 2 === 0 ? 1 : -1;
+
+    // 4. Dibujarte a TI Bailando
+    ctx.save();
+    // Posición: Al lado izquierdo de ella, saltando
+    let myDrawX = goal.x - 80; 
+    let myDrawY = goal.y + jumpOffset;
+    
+    ctx.translate(myDrawX + (player.width/2), myDrawY);
+    ctx.scale(danceDir, 1); // Voltear
+    ctx.drawImage(imgYoParado, -player.width/2, 0, player.width, player.height);
     ctx.restore();
 
-    // UI
+    // 5. Dibujarla a ELLA Bailando
+    ctx.save();
+    let ellaDrawX = goal.x;
+    let ellaDrawY = goal.y + jumpOffset;
+    
+    ctx.translate(ellaDrawX + (goal.width/2), ellaDrawY);
+    ctx.scale(danceDir * -1, 1); // Espejo (opuesto a ti para que se miren o bailen igual)
+    ctx.drawImage(imgElla, -goal.width/2, 0, goal.width, goal.height);
+    ctx.restore();
+
+    // 6. Corazones y Texto
+    ctx.restore(); // Salir de la cámara para dibujar UI fija
+
+    // Fondo semitransparente para el texto
+    ctx.fillStyle = "rgba(255, 255, 255, 0.7)";
+    ctx.fillRect(0, 100, canvas.width, 150);
+
+    ctx.fillStyle = "#d32f2f";
+    ctx.textAlign = "center";
+    ctx.font = "60px 'VT323'";
+    ctx.fillText("❤️ ¡TE ENCONTRÉ! ❤️", canvas.width/2, 180);
+    
+    ctx.font = "30px 'VT323'";
+    ctx.fillStyle = "#5a2d3c";
+    ctx.fillText("(Baja para leer tu carta)", canvas.width/2, 230);
+}
+
+// Función auxiliar para dibujar el mundo (se usa en juego y baile)
+function drawScenery() {
+    // Cielo
+    ctx.fillStyle = "#87CEEB";
+    ctx.fillRect(cameraX, cameraY, canvas.width, canvas.height);
+    // Suelo
+    ctx.fillStyle = "#6d4c41";
+    ctx.fillRect(0, GROUND_Y, LEVEL_LENGTH + 800, 1000);
+    // Plataformas
+    ctx.fillStyle = "#5d4037";
+    for (let p of platforms) {
+        ctx.fillRect(p.x, p.y, p.w, p.h);
+        ctx.strokeStyle = "#3e2723";
+        ctx.strokeRect(p.x, p.y, p.w, p.h);
+    }
+}
+
+function drawUI() {
     ctx.textAlign = "left";
     ctx.fillStyle = "black";
     ctx.font = "24px 'VT323'";
     ctx.fillText("VIDA:", 20, 40);
     for (let i = 0; i < health; i++) {
         ctx.fillText("❤️", 70 + (i * 30), 40);
-    }
-
-    // Victoria
-    if (player.x >= goal.x - 50 && player.y < goal.y + 100) {
-        gameWon = true;
-        displayWinMessage();
-    } else {
-        frame++;
-        requestAnimationFrame(loop);
     }
 }
 
@@ -271,15 +352,11 @@ function takeDamage() {
     invulnerable = true;
     player.dy = -8;
     player.x -= 40;
-    
-    // Encogerse
     let scaleFactor = 0.5 + (0.5 * (health / MAX_HEALTH));
     player.width = BASE_WIDTH * scaleFactor;
     player.height = BASE_HEIGHT * scaleFactor;
-
-    // Flash rojo
     ctx.fillStyle = "rgba(255, 0, 0, 0.5)";
-    ctx.fillRect(cameraX, cameraY, canvas.width, canvas.height);
+    ctx.fillRect(0,0, canvas.width, canvas.height);
 
     if (health <= 0) {
         gameOver();
@@ -289,58 +366,33 @@ function takeDamage() {
 }
 
 function gameOver() {
-    gameRunning = false; // Detiene el bucle
-    
-    // DIBUJAR PANTALLA NEGRA
-    // Usamos resetTransform para asegurarnos de que cubra toda la pantalla
-    // sin importar dónde esté la cámara
+    gameRunning = false;
     ctx.setTransform(1, 0, 0, 1, 0, 0); 
-    
     ctx.fillStyle = "rgba(0, 0, 0, 0.9)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
     ctx.fillStyle = "#ff4d6d";
     ctx.textAlign = "center";
     ctx.font = "60px 'VT323'";
     ctx.fillText("💔 GAME OVER 💔", canvas.width/2, canvas.height/2 - 20);
-    
     ctx.fillStyle = "white";
     ctx.font = "30px 'VT323'";
     ctx.fillText("¡No te rindas! Ella te espera.", canvas.width/2, canvas.height/2 + 30);
-    
     ctx.fillStyle = "#ffff00";
     ctx.fillText("[ Presiona 'R' para Reintentar ]", canvas.width/2, canvas.height/2 + 80);
-
-    // Activar reinicio
     window.addEventListener('keydown', restartGame);
 }
 
 function restartGame(e) {
     if (e.key === 'r' || e.key === 'R') {
         window.removeEventListener('keydown', restartGame);
-        
-        // RESETEAR TODO
         player.x = 50;
         player.y = GROUND_Y - BASE_HEIGHT;
         health = MAX_HEALTH;
         player.width = BASE_WIDTH;
         player.height = BASE_HEIGHT;
-        
         invulnerable = false;
-        gameRunning = true; // Arranca el bucle de nuevo
+        isDancing = false; // Resetear baile
+        gameRunning = true;
         loop();
     }
 }
-
-function displayWinMessage() {
-    ctx.setTransform(1, 0, 0, 1, 0, 0); // Resetear cámara para el mensaje
-    ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = "#d32f2f";
-    ctx.textAlign = "center";
-    ctx.font = "60px 'VT323'";
-    ctx.fillText("¡Llegaste a mi corazón!", canvas.width/2, canvas.height/2 - 20);
-    ctx.font = "30px 'VT323'";
-    ctx.fillText("(Baja para leer tu carta)", canvas.width/2, canvas.height/2 + 40);
-}
-
