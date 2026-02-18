@@ -207,32 +207,31 @@ footer {
     opacity: 0.4; /* Se atenúan más cuando interactúas con el centro */
 }
 
-/* --- POSICIONES DESORDENADAS (El arte del caos) --- */
-/* Usamos porcentajes para que se adapten a la pantalla */
+/* --- POSICIONES DESORDENADAS (Reajustadas para que se vean todas) --- */
 
-/* Foto 1: Arriba izquierda, muy rotada */
-.p1 { top: 2%; left: -2%; transform: rotate(-25deg); }
+/* Foto 1: Inicio a la izquierda */
+.p1 { top: 5%; left: 2%; transform: rotate(-15deg); }
 
-/* Foto 2: Arriba derecha, rotada opuesto */
-.p2 { top: 8%; right: 5%; transform: rotate(15deg); }
+/* Foto 2: Inicio a la derecha */
+.p2 { top: 12%; right: 5%; transform: rotate(10deg); }
 
-/* Foto 3: Un poco más abajo, a la izquierda */
-.p3 { top: 30%; left: 10%; transform: rotate(5deg); width: 200px; }
+/* Foto 3: Altura del juego (Izquierda) */
+.p3 { top: 25%; left: 8%; transform: rotate(5deg); width: 200px; }
 
-/* Foto 4: Cerca del centro a la derecha */
-.p4 { top: 45%; right: 15%; transform: rotate(-10deg); }
+/* Foto 4: Altura del juego (Derecha) */
+.p4 { top: 35%; right: 10%; transform: rotate(-8deg); }
 
-/* Foto 5: Mitad de página, muy a la izquierda */
-.p5 { top: 60%; left: 2%; transform: rotate(-18deg); width: 160px; }
+/* Foto 5: Altura de la carta (Izquierda) */
+.p5 { top: 50%; left: 3%; transform: rotate(-12deg); width: 160px; }
 
-/* Foto 6: Abajo a la derecha */
-.p6 { top: 75%; right: 8%; transform: rotate(20deg); }
+/* Foto 6: Altura de la carta (Derecha) */
+.p6 { top: 60%; right: 5%; transform: rotate(15deg); }
 
-/* Foto 7: Cerca del final, izquierda */
-.p7 { top: 90%; left: 12%; transform: rotate(8deg); }
+/* Foto 7: Altura de la galería (Izquierda) - ¡LA SUBÍ! */
+.p7 { top: 72%; left: 10%; transform: rotate(6deg); }
 
-/* Foto 8: Casi al final, centro-derecha */
-.p8 { top: 105%; right: 25%; transform: rotate(-12deg); }
+/* Foto 8: Pie de página (Derecha) - ¡RESCATADA DEL ABISMO! */
+.p8 { top: 85%; right: 15%; transform: rotate(-10deg); width: 170px; }
 
-/* Foto 9: Abajo del todo a la izquierda */
-.p9 { top: 120%; left: 5%; transform: rotate(2deg); width: 190px; }
+/* Foto 9: Final (Izquierda) - ¡RESCATADA DEL ABISMO! */
+.p9 { top: 92%; left: 5%; transform: rotate(4deg); width: 190px; }}
