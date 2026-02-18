@@ -1,126 +1,173 @@
-/* Reset básico */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+/* Importamos la fuente pixelada romántica */
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
 
 body {
-    font-family: 'VT323', monospace; /* Fuente estilo videojuego */
-    background-color: #ffdde1; /* Rosa suave */
-    color: #5a2d3c;
-    text-align: center;
-    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+    /* --- CAMBIO PRINCIPAL: FONDO DE ATARDECER ROMÁNTICO --- */
+    /* Creamos un degradado vertical: Rosa -> Rosa Atardecer -> Morado Noche */
+    background: linear-gradient(to bottom, #ffc2d1, #ff99ac, #4a1e4e);
+    /* Fijamos el fondo para que no se mueva al hacer scroll */
+    background-attachment: fixed;
+    /* Aseguramos que cubra toda la pantalla */
+    background-size: cover;
+    /* ------------------------------------------------------- */
+    font-family: 'VT323', monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
 }
 
-/* PANTALLA DE INICIO */
+/* --- PANTALLA DE INICIO --- */
 #splash-screen {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    height: 100vh;
-    background: #000;
-    color: #fff;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.95); /* Fondo semi-transparente */
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
-    transition: opacity 1s ease;
-}
-
-#splash-screen h1 {
-    font-size: 3rem;
-    margin-bottom: 20px;
-}
-
-#start-btn {
-    padding: 15px 30px;
-    font-size: 1.5rem;
-    font-family: 'VT323', monospace;
-    background-color: #ff4d6d;
-    color: white;
-    border: 4px solid #fff;
-    cursor: pointer;
-    transition: transform 0.2s;
-}
-
-#start-btn:hover {
-    transform: scale(1.1);
-    background-color: #ff002f;
+    z-index: 100;
+    transition: opacity 1s ease-out;
 }
 
 .heart-beat {
-    font-size: 4rem;
-    animation: heartbeat 1s infinite;
+    font-size: 100px;
+    color: #ff4d6d;
+    animation: heartbeat 1.2s infinite;
 }
 
 @keyframes heartbeat {
     0% { transform: scale(1); }
-    50% { transform: scale(1.2); }
+    25% { transform: scale(1.1); }
+    40% { transform: scale(1); }
+    60% { transform: scale(1.2); }
     100% { transform: scale(1); }
 }
 
-/* OCULTAR ELEMENTOS */
+#start-btn {
+    margin-top: 30px;
+    padding: 15px 40px;
+    font-size: 30px;
+    font-family: 'VT323', monospace;
+    background-color: #ff4d6d;
+    color: white;
+    border: 4px solid #5a2d3c;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s;
+    box-shadow: 0 8px #5a2d3c;
+}
+
+#start-btn:hover {
+    background-color: #ff758f;
+    transform: translateY(-2px);
+    box-shadow: 0 10px #5a2d3c;
+}
+
+#start-btn:active {
+    transform: translateY(4px);
+    box-shadow: 0 4px #5a2d3c;
+}
+
+/* --- CONTENIDO PRINCIPAL --- */
 .hidden {
     display: none;
 }
 
-/* JUEGO */
-#game-section {
-    padding: 20px;
-    background: linear-gradient(to bottom, #87CEEB 0%, #E0F7FA 100%); /* Cielo */
-}
-
-canvas {
-    background-color: transparent;
-    border-bottom: 4px solid #5a2d3c; /* El suelo */
-    max-width: 100%;
-}
-
-/* CARTA */
-#letter-section {
-    padding: 40px 20px;
-    background-color: #fff0f3;
-}
-
-.paper {
-    background: #fff;
+.container {
+    background: rgba(255, 255, 255, 0.9); /* Fondo blanco semi-transparente */
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    max-width: 850px;
     width: 90%;
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 40px;
-    box-shadow: 10px 10px 0px rgba(0,0,0,0.1);
-    border: 1px solid #ddd;
-    font-size: 1.5rem;
+    margin: 20px;
+    border: 4px solid #ff4d6d;
+}
+
+h1, h2, h3 {
+    /* --- CAMBIO: Texto blanco para que resalte en la noche --- */
+    color: #ffffff; 
+    /* Sombra rosa para darle el toque romántico */
+    text-shadow: 3px 3px 0px #ff4d6d, 5px 5px 10px rgba(0,0,0,0.2);
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+}
+
+h1 { font-size: 60px; }
+h2 { font-size: 45px; margin-top: 40px; }
+h3 { font-size: 35px; color: #ff758f; } /* Subtítulos en rosa claro */
+
+/* --- ÁREA DEL JUEGO --- */
+#game-container {
+    margin: 30px auto;
+    border: 5px solid #5a2d3c;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    display: inline-block; /* Para que el borde se ajuste al canvas */
+}
+canvas {
+    background: #87CEEB; /* Cielo azul por defecto si no carga el JS */
+    display: block;
+    cursor: crosshair;
+}
+
+/* --- SECCIÓN DE LA CARTA --- */
+.letter-section {
+    margin-top: 50px;
+    padding: 30px;
+    background: rgba(255, 240, 245, 0.8); /* Un rosa muy clarito y transparente */
+    border-radius: 15px;
+    border: 3px dashed #ff4d6d;
+}
+
+p {
+    font-size: 24px;
+    /* --- CAMBIO: Texto oscuro para leer bien sobre el papel claro --- */
+    color: #5a2d3c; 
     line-height: 1.6;
+    margin-bottom: 20px;
 }
 
-.signature {
-    text-align: right;
-    margin-top: 30px;
-    font-weight: bold;
-    color: #ff4d6d;
-}
-
-/* GALERÍA */
-#gallery-section {
-    padding: 40px;
-}
-
-.gallery-grid {
+/* --- GALERÍA DE FOTOS --- */
+.photo-gallery {
     display: flex;
     justify-content: center;
     gap: 20px;
+    margin-top: 30px;
     flex-wrap: wrap;
 }
 
-.gallery-grid img {
-    width: 300px;
-    height: 300px;
-    object-fit: cover;
-    border: 4px solid #fff;
-    box-shadow: 5px 5px 15px rgba(0,0,0,0.2);
-    border-radius: 10px;
+.photo-frame {
+    background: white;
+    padding: 15px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    transform: rotate(-3deg);
+    transition: transform 0.3s;
+    border: 2px solid #ff4d6d;
+}
+.photo-frame:nth-child(even) {
+    transform: rotate(3deg);
+}
+.photo-frame:hover {
+    transform: scale(1.05) rotate(0deg);
+    z-index: 10;
+}
+.photo-frame img {
+    max-width: 250px;
+    height: auto;
+    border: 1px solid #ddd;
+    display: block;
+}
+
+/* --- PIE DE PÁGINA --- */
+footer {
+    margin-top: 50px;
+    font-size: 20px;
+    color: #ffffff; /* Texto blanco */
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
 }
