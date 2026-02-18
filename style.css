@@ -403,7 +403,7 @@ white-space: nowrap !important;
 
 /* Usar esta clase si la pareja sale a la DERECHA */
 .focus-right {
-    object-position: 80% center !important; /* Enfoca mayormente a la derecha */
+    object-position: 85% center !important; /* Enfoca mayormente a la derecha */
 }
 
 /* Usar esta clase si la pareja sale en el CENTRO */
@@ -420,6 +420,7 @@ white-space: nowrap !important;
 .focus-top {
     object-position: center top !important;
 }
+
 
 
 
