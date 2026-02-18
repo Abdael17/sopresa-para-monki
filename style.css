@@ -175,3 +175,64 @@ footer {
     color: #888;
 }
 
+/* =========================================
+   ESTILOS PARA LAS FOTOS DEL FONDO
+   ========================================= */
+
+/* Contenedor que asegura que las fotos no tapen los clicks */
+.background-photos-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 250vh; /* Altura suficiente para que se esparzan al bajar */
+    overflow: hidden; /* Evita barras de scroll horizontales */
+    pointer-events: none; /* ¡IMPORTANTE! Permite hacer click a través de ellas */
+    z-index: -1; /* Se colocan DETRÁS de todo el contenido principal */
+}
+
+/* Estilo general de cada foto (Tipo Polaroid) */
+.bg-photo {
+    position: absolute; /* Permite colocarlas donde queramos */
+    width: 180px; /* Tamaño no muy grande */
+    padding: 10px 10px 35px 10px; /* Marco blanco más grueso abajo */
+    background: #fff;
+    box-shadow: 5px 5px 20px rgba(0,0,0,0.7);
+    opacity: 0.8; /* Un poco transparentes para que sean sutiles */
+    transition: opacity 0.3s;
+}
+
+/* Opcional: si pasas el mouse por encima, se aclaran */
+.container:hover ~ .background-photos-container .bg-photo {
+    opacity: 0.4; /* Se atenúan más cuando interactúas con el centro */
+}
+
+/* --- POSICIONES DESORDENADAS (El arte del caos) --- */
+/* Usamos porcentajes para que se adapten a la pantalla */
+
+/* Foto 1: Arriba izquierda, muy rotada */
+.p1 { top: 2%; left: -2%; transform: rotate(-25deg); }
+
+/* Foto 2: Arriba derecha, rotada opuesto */
+.p2 { top: 8%; right: 5%; transform: rotate(15deg); }
+
+/* Foto 3: Un poco más abajo, a la izquierda */
+.p3 { top: 30%; left: 10%; transform: rotate(5deg); width: 200px; }
+
+/* Foto 4: Cerca del centro a la derecha */
+.p4 { top: 45%; right: 15%; transform: rotate(-10deg); }
+
+/* Foto 5: Mitad de página, muy a la izquierda */
+.p5 { top: 60%; left: 2%; transform: rotate(-18deg); width: 160px; }
+
+/* Foto 6: Abajo a la derecha */
+.p6 { top: 75%; right: 8%; transform: rotate(20deg); }
+
+/* Foto 7: Cerca del final, izquierda */
+.p7 { top: 90%; left: 12%; transform: rotate(8deg); }
+
+/* Foto 8: Casi al final, centro-derecha */
+.p8 { top: 105%; right: 25%; transform: rotate(-12deg); }
+
+/* Foto 9: Abajo del todo a la izquierda */
+.p9 { top: 120%; left: 5%; transform: rotate(2deg); width: 190px; }
