@@ -10,7 +10,6 @@ const MAX_HEALTH = 3;
 const splashScreen = document.getElementById('splash-screen');
 const mainContent = document.getElementById('main-content');
 const startBtn = document.getElementById('start-btn');
-const music = document.getElementById('bg-music');
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
@@ -120,8 +119,6 @@ startBtn.addEventListener('click', () => {
     setTimeout(() => {
         splashScreen.style.display = 'none';
         mainContent.classList.remove('hidden');
-        music.volume = 0.4;
-        music.play().catch(e => console.log("Audio error:", e));
         startGame();
     }, 1000);
 });
@@ -604,3 +601,4 @@ audioPlayer.addEventListener('ended', nextSong); // Cuando acaba una, sigue la o
 // Cargar la primera canción al iniciar (sin reproducir aún)
 loadSong(playlist[currentSongIndex]);
 audioPlayer.volume = 0.5; // Volumen al 50%
+
