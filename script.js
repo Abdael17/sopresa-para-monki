@@ -26,7 +26,7 @@ imgEnemigo.src = 'assets/Monoconpistola.png';
 
 // --- ESTADO DEL JUEGO ---
 let gameRunning = false;
-let isDancing = false; // ¡NUEVO ESTADO: BAILE! 🕺💃
+let isDancing = false; 
 let frame = 0;
 let health = MAX_HEALTH;
 let invulnerable = false;
@@ -55,7 +55,7 @@ let player = {
 // --- META (BEEL) ---
 let goal = {
     x: LEVEL_LENGTH - 150,
-    y: (GROUND_Y - 450) - BASE_HEIGHT, // Altura ajustada
+    y: (GROUND_Y - 450) - BASE_HEIGHT, 
     width: BASE_WIDTH,
     height: BASE_HEIGHT
 };
@@ -119,10 +119,10 @@ function loop() {
     // MODO BAILE (VICTORIA) 🕺💃
     // ==========================================
     if (isDancing) {
-        performDanceRoutine(); // Función especial de baile
+        performDanceRoutine(); 
         frame++;
         requestAnimationFrame(loop);
-        return; // Saltamos la física normal del juego
+        return; 
     }
 
     // ==========================================
@@ -183,8 +183,7 @@ function loop() {
     ctx.save();
     ctx.translate(-cameraX, -cameraY);
 
-    // Fondo y Escenario
-    drawScenery(); // Función auxiliar para no repetir código
+    drawScenery();
 
     // Enemigos
     for (let en of enemies) {
@@ -245,68 +244,69 @@ function loop() {
     // UI Vida
     drawUI();
 
-    // CHECK VICTORIA
-    if (player.x >= goal.x - 60 && player.y < goal.y + 100) {
-        isDancing = true; // ACTIVAR BAILE
-        player.x = goal.x - 80; // Ponerse al lado de ella
-        player.y = goal.y; // Misma altura
-    } else {
-        frame++;
-        requestAnimationFrame(loop);
+    // ========================================================
+    // CORRECCIÓN DEL BUG: ¡EL BUCLE DEBE CONTINUAR!
+    // ========================================================
+    // Si llegas a la meta...
+    if (!isDancing && player.x >= goal.x - 60 && player.y < goal.y + 100) {
+        isDancing = true;       // Activamos el baile
+        player.x = goal.x - 80; // Te colocamos en posición
+        player.y = goal.y;      
+        // IMPORTANTE: NO usamos 'else'. Dejamos que el código siga
+        // para que ejecute requestAnimationFrame abajo.
     }
+
+    // Avanzar frame y pedir siguiente vuelta SIEMPRE
+    frame++;
+    requestAnimationFrame(loop);
 }
 
 // ==========================================
-// FUNCIÓN DE BAILE (LO NUEVO) 🎶
+// FUNCIÓN DE BAILE 🎶
 // ==========================================
 function performDanceRoutine() {
-    // 1. Configurar Cámara Centrada en la Pareja
     let targetCamX = goal.x - (canvas.width / 2) + 50;
     let targetCamY = goal.y - (canvas.height / 2);
     
-    // Suavizado simple de cámara
-    cameraX = targetCamX;
-    cameraY = targetCamY;
+    // Suavizado rápido de cámara
+    cameraX += (targetCamX - cameraX) * 0.1;
+    cameraY += (targetCamY - cameraY) * 0.1;
 
     ctx.save();
     ctx.translate(-cameraX, -cameraY);
 
-    // 2. Dibujar Fondo (Cielo, Suelo, Plataformas)
     drawScenery();
 
-    // 3. Cálculos del Baile
-    // Salto sincronizado (Seno)
-    let jumpOffset = Math.sin(frame * 0.15) * 20; // Saltan 20px arriba y abajo
-    if (jumpOffset > 0) jumpOffset = 0; // Solo saltan hacia arriba (negativo en Y)
+    // Cálculos del Baile
+    let jumpOffset = Math.sin(frame * 0.15) * 20; 
+    if (jumpOffset > 0) jumpOffset = 0; 
 
-    // Mirar izquierda/derecha (cada 30 frames)
+    // Mirar izquierda/derecha (Cambia cada 30 frames)
     let danceDir = Math.floor(frame / 30) % 2 === 0 ? 1 : -1;
 
-    // 4. Dibujarte a TI Bailando
+    // TÚ (Bailando)
     ctx.save();
-    // Posición: Al lado izquierdo de ella, saltando
     let myDrawX = goal.x - 80; 
     let myDrawY = goal.y + jumpOffset;
     
     ctx.translate(myDrawX + (player.width/2), myDrawY);
-    ctx.scale(danceDir, 1); // Voltear
+    ctx.scale(danceDir, 1); 
     ctx.drawImage(imgYoParado, -player.width/2, 0, player.width, player.height);
     ctx.restore();
 
-    // 5. Dibujarla a ELLA Bailando
+    // ELLA (Bailando)
     ctx.save();
     let ellaDrawX = goal.x;
     let ellaDrawY = goal.y + jumpOffset;
     
     ctx.translate(ellaDrawX + (goal.width/2), ellaDrawY);
-    ctx.scale(danceDir * -1, 1); // Espejo (opuesto a ti para que se miren o bailen igual)
+    ctx.scale(danceDir * -1, 1); // Espejo
     ctx.drawImage(imgElla, -goal.width/2, 0, goal.width, goal.height);
     ctx.restore();
 
-    // 6. Corazones y Texto
-    ctx.restore(); // Salir de la cámara para dibujar UI fija
+    ctx.restore(); 
 
-    // Fondo semitransparente para el texto
+    // UI FINAL
     ctx.fillStyle = "rgba(255, 255, 255, 0.7)";
     ctx.fillRect(0, 100, canvas.width, 150);
 
@@ -320,15 +320,11 @@ function performDanceRoutine() {
     ctx.fillText("(Baja para leer tu carta)", canvas.width/2, 230);
 }
 
-// Función auxiliar para dibujar el mundo (se usa en juego y baile)
 function drawScenery() {
-    // Cielo
     ctx.fillStyle = "#87CEEB";
     ctx.fillRect(cameraX, cameraY, canvas.width, canvas.height);
-    // Suelo
     ctx.fillStyle = "#6d4c41";
     ctx.fillRect(0, GROUND_Y, LEVEL_LENGTH + 800, 1000);
-    // Plataformas
     ctx.fillStyle = "#5d4037";
     for (let p of platforms) {
         ctx.fillRect(p.x, p.y, p.w, p.h);
@@ -391,7 +387,7 @@ function restartGame(e) {
         player.width = BASE_WIDTH;
         player.height = BASE_HEIGHT;
         invulnerable = false;
-        isDancing = false; // Resetear baile
+        isDancing = false; 
         gameRunning = true;
         loop();
     }
