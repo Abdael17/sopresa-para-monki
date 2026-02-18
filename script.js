@@ -24,7 +24,7 @@ const imgElla = new Image();
 imgElla.src = 'assets/Beel_parada.png';     
 
 const imgObstaculo = new Image();
-imgObstaculo.src = 'assets/Monoconpistola.jpg'; 
+imgObstaculo.src = 'assets/Monoconpistola.png'; 
 
 // --- ESTADO DEL JUEGO ---
 let gameRunning = false;
@@ -234,3 +234,4 @@ function displayWinMessage() {
     ctx.font = "30px 'VT323'";
     ctx.fillText("(Baja para leer tu carta)", canvas.width/2, canvas.height/2 + 40);
 }
+
