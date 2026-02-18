@@ -5,15 +5,16 @@
 body {
     margin: 0;
     padding: 0;
-    padding-bottom: 150px !important;
+    padding-bottom: 50px !important;
     /* Fondo: Noche profunda romántica */
     background: linear-gradient(to bottom, #0f172a, #1a0b2e, #3a1c33);
     background-attachment: fixed;
     font-family: 'VT323', monospace;
     color: #e0e0e0;
+    position: relative !important;
     /* Asegura que todo el contenido se centre horizontalmente por defecto */
     text-align: center;
-    min-height: 100vh;
+    min-height: 260vh !important;
 }
 
 /* --- PANTALLA DE INICIO (ANTES DE LA SORPRESA) --- */
@@ -235,7 +236,7 @@ footer {
 .p8 { top: 85%; right: 2%; transform: rotate(-10deg); width: 170px; }
 
 /* Foto 9: Final (Izquierda) - ¡RESCATADA DEL ABISMO! */
-.p9 { top: 92%; left: 5%; transform: rotate(4deg); width: 190px; }}
+.p9 { top: 92%; left: 5%;z-index: 5 !important; transform: rotate(4deg); width: 190px; }
 
 /* =========================================
    REPRODUCTOR COMPACTO (WIDGET TIPO TARJETA)
@@ -397,4 +398,5 @@ white-space: nowrap !important;
     border: 1px solid #ddd;
     object-fit: cover; /* Esto hace que el video se recorte bien sin deformarse */
 }
+
 
