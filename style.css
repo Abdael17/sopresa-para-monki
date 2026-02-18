@@ -97,34 +97,35 @@ h2 {
 h3 { font-size: 28px; color: #ffccd5; }
 
 /* --- CORRECCIÓN 1: ÁREA DEL JUEGO CENTRADA --- */
+/* PARCHE DE SEGURIDAD AL FINAL DE STYLES.CSS */
+
+/* Forzar al contenedor del juego a centrarse */
 #game-container {
-    /* "block" y "margin: auto" aseguran el centrado */
-    display: block; 
-    margin: 30px auto; 
-    width: fit-content; /* El borde se ajusta al tamaño del canvas */
-    border: 4px solid #ff4d6d;
-    box-shadow: 0 0 40px rgba(255, 77, 109, 0.5); /* Resplandor neón */
-    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 20px auto !important;
+    width: 100%;
 }
 
+/* Forzar al canvas a comportarse */
 canvas {
-    background: #0f172a;
     display: block;
+    margin: 0 auto !important; /* El !important obliga al navegador a centrarlo */
+    max-width: 100%;
+    border: 4px solid #ff4d6d;
+    box-shadow: 0 0 30px rgba(255, 77, 109, 0.5);
 }
 
-/* --- CORRECCIÓN 2: LA CARTA COMO UN RECTÁNGULO CENTRADO --- */
+/* Asegurar que la carta tenga fondo */
 .letter-section {
-    /* Ancho máximo limitado para que parezca una hoja de papel */
-    max-width: 650px; 
-    /* Centrar el bloque de la carta */
-    margin: 50px auto; 
+    background-color: #fffaf0 !important;
+    color: #5a2d3c !important;
+    margin: 50px auto !important;
     padding: 40px;
-    /* Fondo estilo papel oscuro y translúcido */
-    background: rgba(255, 240, 245, 0.1); 
-    border: 1px solid rgba(255, 77, 109, 0.4);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    /* Importante: El texto dentro de la carta se alinea a la izquierda para leer mejor */
-    text-align: left; 
+    border: 4px double #ff4d6d;
+    max-width: 700px;
 }
 
 p {
@@ -173,3 +174,4 @@ footer {
     font-size: 18px;
     color: #888;
 }
+
