@@ -21,7 +21,7 @@ const imgElla = new Image();
 imgElla.src = 'assets/Beel_parada.png';     // Sprite de ella
 
 const imgObstaculo = new Image();
-imgObstaculo.src = 'assets/monoconpistola.png'; // ¡EL MONO! 🐵🔫
+imgObstaculo.src = 'assets/Monoconpistola.png'; // ¡EL MONO! 🐵🔫
 
 // --- ESTADO DEL JUEGO ---
 let gameRunning = false;
@@ -237,3 +237,4 @@ function displayWinMessage() {
     ctx.font = "30px 'VT323'";
     ctx.fillText("(Baja para leer tu carta)", canvas.width/2, canvas.height/2 + 40);
 }
+
