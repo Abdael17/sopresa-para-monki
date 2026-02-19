@@ -263,4 +263,397 @@ function loop() {
     if (player.dy > 0) {
         for (let p of platforms) {
             if (
-                player.x
+                player.x + 10 < p.x + p.w &&
+                player.x + player.width - 10 > p.x &&
+                player.y + player.height > p.y &&
+                player.y + player.height < p.y + p.h + 15
+            ) {
+                player.y = p.y - player.height;
+                player.dy = 0;
+                player.grounded = true;
+            }
+        }
+    }
+
+    // CAMBIO DE NIVEL
+    if (player.x > 1150) { 
+        if (currentLevel < levels.length - 1) {
+            currentLevel++;
+            platforms = levels[currentLevel].platforms;
+            enemies = levels[currentLevel].enemies;
+            levelHearts = levels[currentLevel].hearts;
+            player.x = 20; 
+            console.log("¡Nivel " + (currentLevel + 1) + "!");
+        }
+    }
+
+    // Cámara
+    let targetCamX = player.x - 200;
+    cameraX += (targetCamX - cameraX) * 0.1;
+    if (cameraX < 0) cameraX = 0;
+    
+    // --- DIBUJAR ---
+    ctx.save();
+    drawStaticBackground(); 
+    ctx.translate(-cameraX, 0); 
+    drawWorldScenery(); 
+
+    // ** NUEVO: DIBUJAR CASTILLO (Solo en Nivel 5) **
+    if (currentLevel === 4) { // Array empieza en 0, así que 4 es el nivel 5
+        drawCastle(goal.x - 50, goal.y - 180); // Detrás de ella
+    }
+
+    // Corazones
+    for (let h of levelHearts) {
+        if (!h.collected) {
+            ctx.fillStyle = "red";
+            ctx.font = "30px Arial";
+            ctx.fillText("❤️", h.x, h.y);
+            if (
+                player.x < h.x + h.w &&
+                player.x + player.width > h.x &&
+                player.y < h.y + h.h &&
+                player.y + player.height > h.y
+            ) {
+                h.collected = true;
+                if (health < MAX_HEALTH) health++;
+            }
+        }
+    }
+
+    // Enemigos
+    for (let en of enemies) {
+        en.x += en.speed * en.dir;
+        // Lógica de patrulla estricta
+        if (en.x > en.startX + en.range) en.dir = -1;
+        if (en.x < en.startX - en.range) en.dir = 1;
+
+        if (imgEnemigo.complete) {
+            if (en.dir === -1) {
+                ctx.save();
+                ctx.translate(en.x + en.w, en.y);
+                ctx.scale(-1, 1);
+                ctx.drawImage(imgEnemigo, 0, 0, en.w, en.h);
+                ctx.restore();
+            } else {
+                ctx.drawImage(imgEnemigo, en.x, en.y, en.w, en.h);
+            }
+        } else {
+            ctx.fillStyle = "red"; ctx.fillRect(en.x, en.y, en.w, en.h);
+        }
+
+        if (!invulnerable) {
+            if (
+                player.x + 20 < en.x + en.w &&
+                player.x + player.width - 20 > en.x &&
+                player.y + 20 < en.y + en.h &&
+                player.y + player.height > en.y
+            ) {
+                takeDamage();
+            }
+        }
+    }
+
+    // Jugador
+    let spriteY = player.y;
+    let imagenAUsar = moving ? imgYoCaminando : imgYoParado;
+    
+    if (!invulnerable || frame % 10 < 5) {
+        if (!player.facingRight) {
+            ctx.save();
+            ctx.translate(player.x + player.width, spriteY);
+            ctx.scale(-1, 1);
+            ctx.drawImage(imagenAUsar, 0, 0, player.width, player.height);
+            ctx.restore();
+        } else {
+            ctx.drawImage(imagenAUsar, player.x, spriteY, player.width, player.height);
+        }
+    }
+
+    // META (Ella)
+    if (currentLevel === levels.length - 1) {
+        let finalX = 1000; 
+        let finalY = 400 - BASE_HEIGHT;
+
+        ctx.drawImage(imgElla, finalX, finalY, goal.width, goal.height);
+        ctx.fillStyle = "#ff4d6d";
+        ctx.font = "bold 20px 'VT323'";
+        ctx.textAlign = "center";
+        ctx.fillText("¡Amor!", finalX + goal.width/2, finalY - 15);
+
+        if (!isDancing && player.x >= finalX - 60) {
+            isDancing = true;
+            player.x = finalX - 80;
+            player.y = finalY;
+            goal.x = finalX;
+            goal.y = finalY;
+        }
+    }
+
+    ctx.restore(); 
+    drawUI();
+
+    frame++;
+    requestAnimationFrame(loop);
+}
+
+// ==========================================
+// FUNCIONES AUXILIARES
+// ==========================================
+
+function drawCastle(x, y) {
+    // Función simple para dibujar un castillo de fondo
+    ctx.fillStyle = "#2c3e50"; // Gris oscuro azulado
+    // Torre Izquierda
+    ctx.fillRect(x, y, 60, 200);
+    // Torre Derecha
+    ctx.fillRect(x + 140, y, 60, 200);
+    // Bloque Central
+    ctx.fillRect(x + 40, y + 60, 120, 140);
+    // Puerta
+    ctx.fillStyle = "#1a252f"; // Más oscuro
+    ctx.beginPath();
+    ctx.arc(x + 100, y + 200, 40, Math.PI, 0); // Arco
+    ctx.fill();
+    // Almenas (cuadraditos arriba)
+    ctx.fillStyle = "#2c3e50";
+    ctx.fillRect(x, y - 20, 20, 20);
+    ctx.fillRect(x + 40, y - 20, 20, 20);
+    ctx.fillRect(x + 140, y - 20, 20, 20);
+    ctx.fillRect(x + 180, y - 20, 20, 20);
+    
+    // Banderas
+    ctx.fillStyle = "#e74c3c"; // Roja
+    ctx.beginPath();
+    ctx.moveTo(x + 10, y - 20);
+    ctx.lineTo(x + 10, y - 50);
+    ctx.lineTo(x + 40, y - 35);
+    ctx.fill();
+}
+
+function drawStaticBackground() {
+    ctx.fillStyle = "#0f172a";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    ctx.fillStyle = "#fdf4dc";
+    ctx.shadowBlur = 20;
+    ctx.shadowColor = "white";
+    ctx.beginPath();
+    ctx.arc(canvas.width - 100, 100, 40, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.shadowBlur = 0;
+}
+
+function drawWorldScenery() {
+    ctx.fillStyle = "white";
+    for (let s of stars) {
+        ctx.globalAlpha = Math.abs(Math.sin(frame * 0.05 + s.x));
+        ctx.fillRect(s.x, s.y, s.size, s.size);
+    }
+    ctx.globalAlpha = 1.0;
+
+    ctx.fillStyle = "#1e293b";
+    ctx.fillRect(0, GROUND_Y, LEVEL_LENGTH * 2, 500);
+    ctx.fillStyle = "#064e3b";
+    ctx.fillRect(0, GROUND_Y, LEVEL_LENGTH * 2, 20);
+
+    ctx.fillStyle = "#334155";
+    for (let p of platforms) {
+        ctx.fillRect(p.x, p.y, p.w, p.h);
+        ctx.strokeStyle = "#94a3b8";
+        ctx.strokeRect(p.x, p.y, p.w, p.h);
+    }
+}
+
+function drawUI() {
+    ctx.textAlign = "left";
+    ctx.fillStyle = "white";
+    ctx.font = "24px 'VT323'";
+    ctx.fillText("VIDA:", 20, 40);
+    for (let i = 0; i < health; i++) {
+        ctx.fillText("❤️", 70 + (i * 30), 40);
+    }
+}
+
+function takeDamage() {
+    health--;
+    invulnerable = true;
+    player.dy = -8;
+    player.x -= 40;
+    
+    ctx.fillStyle = "rgba(255, 0, 0, 0.5)";
+    ctx.fillRect(0,0, canvas.width, canvas.height);
+
+    if (health <= 0) {
+        isGameOver = true;
+    } else {
+        setTimeout(() => { invulnerable = false; }, 1500);
+    }
+}
+
+function drawGameOverScreen() {
+    ctx.setTransform(1, 0, 0, 1, 0, 0); 
+    ctx.fillStyle = "rgba(0, 0, 0, 0.9)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    ctx.fillStyle = "#ff4d6d";
+    ctx.textAlign = "center";
+    ctx.font = "60px 'VT323'";
+    ctx.fillText("😢 GAME OVER", canvas.width/2, canvas.height/2 - 20);
+    
+    ctx.fillStyle = "white";
+    ctx.font = "30px 'VT323'";
+    ctx.fillText("Presiona 'R' para intentar de nuevo", canvas.width/2, canvas.height/2 + 40);
+}
+
+function restartGame() {
+    player.x = 50;
+    player.y = GROUND_Y - BASE_HEIGHT;
+    health = MAX_HEALTH;
+    invulnerable = false;
+    isDancing = false;
+    isGameOver = false;
+    
+    // REINICIO TOTAL
+    currentLevel = 0;
+    platforms = levels[currentLevel].platforms;
+    enemies = levels[currentLevel].enemies;
+    levelHearts = levels[currentLevel].hearts;
+
+    // RESTAURAR CORAZONES
+    levels.forEach(level => {
+        if(level.hearts) {
+            level.hearts.forEach(h => h.collected = false);
+        }
+    });
+
+    gamerRunning = true;
+}
+
+function performDanceRoutine() {
+    let targetCamX = goal.x - (canvas.width / 2) + 50;
+    cameraX += (targetCamX - cameraX) * 0.1;
+
+    ctx.save();
+    drawStaticBackground();
+    ctx.translate(-cameraX, 0);
+    drawWorldScenery();
+    
+    // Dibujar castillo durante el baile también
+    drawCastle(goal.x - 50, goal.y - 180);
+
+    let jumpOffset = Math.sin(frame * 0.15) * 20; 
+    if (jumpOffset > 0) jumpOffset = 0; 
+    let danceDir = Math.floor(frame / 30) % 2 === 0 ? 1 : -1;
+
+    ctx.save();
+    ctx.translate(goal.x - 80 + (player.width/2), goal.y + jumpOffset);
+    ctx.scale(danceDir, 1); 
+    ctx.drawImage(imgYoParado, -player.width/2, 0, player.width, player.height);
+    ctx.restore();
+
+    ctx.save();
+    ctx.translate(goal.x + (goal.width/2), goal.y + jumpOffset);
+    ctx.scale(danceDir * -1, 1); 
+    ctx.drawImage(imgElla, -goal.width/2, 0, goal.width, goal.height);
+    ctx.restore();
+
+    ctx.restore(); 
+
+    ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
+    ctx.fillRect(0, 100, canvas.width, 150);
+
+    ctx.fillStyle = "#ff4d6d";
+    ctx.textAlign = "center";
+    ctx.font = "60px 'VT323'";
+    ctx.fillText("❤️ ¡TE ENCONTRÉ! ❤️", canvas.width/2, 180);
+    
+    ctx.fillStyle = "white";
+    ctx.font = "30px 'VT323'";
+    ctx.fillText("Baja para leer tu carta...", canvas.width/2, 230);
+}
+
+// ==========================================
+// REPRODUCTOR DE MÚSICA (CORREGIDO)
+// ==========================================
+
+const playlist = [
+    { title: "Yellow", artist: "Coldplay", src: "assets/Canción.mp3", cover: "assets/Cover.jpg" },
+    { title: "Those eyes", artist: "New west", src: "assets/Canción1.mp3", cover: "assets/Cover1.jpg" },
+    { title: "My kind of woman", artist: "Mac Demarco", src: "assets/Canción2.mp3", cover: "assets/Cover2.jpg" },
+    { title: "The Scientist", artist: "Coldplay", src: "assets/Canción3.mp3", cover: "assets/Cover3.jpg" },
+    { title: "Something about you", artist: "Eyedress", src: "assets/Canción4.mp3", cover: "assets/Cover4.jpg" },
+    { title: "Compass", artist: "The Neighbourhood", src: "assets/Canción5.mp3", cover: "assets/Cover5.jpg" },
+    { title: "Just The Way You Are", artist: "Bruno Mars", src: "assets/Canción6.mp3", cover: "assets/Cover6.jpg" }
+];
+
+let currentSongIndex = 0;
+
+const audioPlayer = document.getElementById('audio-player');
+const playBtn = document.getElementById('play-btn');
+const prevBtn = document.getElementById('prev-btn');
+const nextBtn = document.getElementById('next-btn');
+const songTitle = document.getElementById('song-title');
+const songArtist = document.getElementById('song-artist');
+const coverImg = document.getElementById('cover-img');
+
+// Referencias a la barra de progreso
+const progressContainer = document.getElementById('progress-container'); // La barra gris
+const progressDot = document.getElementById('progress-dot'); // El punto que se mueve
+
+function loadSong(song) {
+    if(!songTitle) return;
+    songTitle.innerText = song.title;
+    songArtist.innerText = song.artist;
+    audioPlayer.src = song.src;
+    coverImg.src = song.cover;
+}
+
+function togglePlay() {
+    if (audioPlayer.paused) {
+        audioPlayer.play();
+        playBtn.innerText = "⏸️";
+        coverImg.style.transform = "rotate(3deg) scale(1.1)";
+    } else {
+        audioPlayer.pause();
+        playBtn.innerText = "▶️";
+        coverImg.style.transform = "rotate(0deg) scale(1)";
+    }
+}
+
+function nextSong() {
+    currentSongIndex++;
+    if (currentSongIndex > playlist.length - 1) currentSongIndex = 0;
+    loadSong(playlist[currentSongIndex]);
+    audioPlayer.play();
+    playBtn.innerText = "⏸️";
+}
+
+function prevSong() {
+    currentSongIndex--;
+    if (currentSongIndex < 0) currentSongIndex = playlist.length - 1;
+    loadSong(playlist[currentSongIndex]);
+    audioPlayer.play();
+    playBtn.innerText = "⏸️";
+}
+
+// LÓGICA DE LA BARRA DE MÚSICA
+if(audioPlayer) {
+    audioPlayer.addEventListener('timeupdate', () => {
+        if(audioPlayer.duration && progressDot) {
+            // Calculamos porcentaje
+            const percent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+            // Movemos SOLO el punto (left)
+            progressDot.style.left = percent + '%';
+        }
+    });
+    audioPlayer.addEventListener('ended', nextSong);
+}
+
+// Listeners
+if(playBtn) playBtn.addEventListener('click', togglePlay);
+if(nextBtn) nextBtn.addEventListener('click', nextSong);
+if(prevBtn) prevBtn.addEventListener('click', prevSong);
+
+// Cargar primera canción
+loadSong(playlist[currentSongIndex]);
