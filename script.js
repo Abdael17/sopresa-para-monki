@@ -1,5 +1,5 @@
 // ==========================================
-// CÓDIGO FINAL - VERSIÓN MAESTRA
+// CÓDIGO FINAL - TAMAÑO AJUSTADO & SIN ERRORES
 // ==========================================
 
 // --- CONFIGURACIÓN ---
@@ -7,7 +7,7 @@ const SPEED = 5;
 const JUMP_FORCE = -16;
 const GRAVITY = 0.8;
 const GROUND_Y = 400;
-const LEVEL_LENGTH = 1200; 
+const LEVEL_LENGTH = 1200; // El mundo sigue siendo largo, pero la ventana será pequeña
 const MAX_HEALTH = 3;
 
 // --- ELEMENTOS HTML ---
@@ -77,7 +77,7 @@ for (let i = 0; i < 300; i++) {
 let shootingStar = { x: 0, y: 0, active: false, speedX: 0, speedY: 0 };
 
 // ==========================================
-// SISTEMA DE 5 NIVELES (AJUSTADO)
+// SISTEMA DE 5 NIVELES
 // ==========================================
 let currentLevel = 0;
 
@@ -114,17 +114,16 @@ const levels = [
             { x: 900, y: 110, w: 30, h: 30, collected: false }
         ]
     },
-    // --- NIVEL 3: Islas Flotantes (CORREGIDO) ---
+    // --- NIVEL 3: Islas Flotantes ---
     {
         platforms: [
             { x: 0, y: 400, w: 150, h: 40 },
-            { x: 200, y: 400, w: 200, h: 20 }, // Plataforma baja donde va el enemigo
+            { x: 200, y: 400, w: 200, h: 20 }, 
             { x: 500, y: 300, w: 200, h: 20 }, 
             { x: 800, y: 200, w: 200, h: 20 }, 
             { x: 1100, y: 400, w: 100, h: 40 }
         ],
         enemies: [
-            // DEVUELTO AL INICIO: En x:300 (Plataforma 2). Altura y:340 para pisar suelo (400-60)
             { x: 300, y: 340, w: 60, h: 60, speed: 2, startX: 250, range: 100, dir: 1 }, 
             { x: 900, y: 140, w: 60, h: 60, speed: 2, startX: 900, range: 50, dir: 1 }
         ],
@@ -149,7 +148,7 @@ const levels = [
             { x: 800, y: 100, w: 30, h: 30, collected: false }
         ]
     },
-    // --- NIVEL 5: El Castillo Final (CORREGIDO) ---
+    // --- NIVEL 5: El Castillo Final ---
     {
         platforms: [
             { x: 0, y: 400, w: 200, h: 40 },
@@ -159,7 +158,6 @@ const levels = [
             { x: 700, y: 400, w: 500, h: 40 } 
         ],
         enemies: [
-            // REPARTIDOS: Uno en la plat 2 (x:300) y otro en plat 4 (x:600)
             { x: 300, y: 240, w: 60, h: 60, speed: 2, startX: 250, range: 50, dir: 1 },
             { x: 600, y: 240, w: 60, h: 60, speed: 2, startX: 550, range: 50, dir: 1 }
         ],
@@ -272,7 +270,7 @@ function loop() {
         }
     }
 
-    // CAMBIO DE NIVEL
+    // CAMBIO DE NIVEL (Ajustado)
     if (player.x > 1150) { 
         if (currentLevel < levels.length - 1) {
             currentLevel++;
@@ -284,20 +282,29 @@ function loop() {
         }
     }
 
-    // Cámara
-    let targetCamX = player.x - 200;
+    // CÁMARA (Lógica de seguimiento)
+    // El objetivo de la cámara es centrar al jugador, pero sin salirse del mapa
+    let targetCamX = player.x - (canvas.width / 2) + (player.width / 2);
+    
+    // Límites de la cámara
+    if (targetCamX < 0) targetCamX = 0;
+    if (targetCamX > LEVEL_LENGTH - canvas.width) targetCamX = LEVEL_LENGTH - canvas.width;
+
+    // Suavizado
     cameraX += (targetCamX - cameraX) * 0.1;
-    if (cameraX < 0) cameraX = 0;
     
     // --- DIBUJAR ---
     ctx.save();
+    
+    // 1. Fondo Estático (Cielo y Luna no se mueven con la cámara)
     drawStaticBackground(); 
+    
+    // 2. Mover el "mundo" según la cámara
     ctx.translate(-cameraX, 0); 
     drawWorldScenery(); 
 
     // CASTILLO (Solo en Nivel 5)
     if (currentLevel === 4) { 
-        // CORREGIDO: Bajado (Y-130) para que la base toque el suelo (400)
         drawCastle(goal.x - 50, goal.y - 130); 
     }
 
@@ -387,7 +394,7 @@ function loop() {
         }
     }
 
-    ctx.restore(); 
+    ctx.restore(); // Fin de la cámara
     drawUI();
 
     frame++;
@@ -428,6 +435,7 @@ function drawStaticBackground() {
     ctx.shadowBlur = 20;
     ctx.shadowColor = "white";
     ctx.beginPath();
+    // Luna siempre en la esquina derecha de la pantalla (no del mundo)
     ctx.arc(canvas.width - 100, 100, 40, 0, Math.PI * 2);
     ctx.fill();
     ctx.shadowBlur = 0;
@@ -519,6 +527,11 @@ function restartGame() {
 
 function performDanceRoutine() {
     let targetCamX = goal.x - (canvas.width / 2) + 50;
+    
+    // Limites de cámara en la victoria
+    if (targetCamX < 0) targetCamX = 0;
+    if (targetCamX > LEVEL_LENGTH - canvas.width) targetCamX = LEVEL_LENGTH - canvas.width;
+
     cameraX += (targetCamX - cameraX) * 0.1;
 
     ctx.save();
