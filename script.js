@@ -1,5 +1,5 @@
 // ==========================================
-// CÓDIGO FINAL - SCRIPT.JS (CORREGIDO)
+// CÓDIGO FINAL - VERSIÓN MAESTRA
 // ==========================================
 
 // --- CONFIGURACIÓN ---
@@ -77,7 +77,7 @@ for (let i = 0; i < 300; i++) {
 let shootingStar = { x: 0, y: 0, active: false, speedX: 0, speedY: 0 };
 
 // ==========================================
-// SISTEMA DE 5 NIVELES
+// SISTEMA DE 5 NIVELES (AJUSTADO)
 // ==========================================
 let currentLevel = 0;
 
@@ -97,7 +97,7 @@ const levels = [
             { x: 650, y: 170, w: 30, h: 30, collected: false }
         ]
     },
-    // --- NIVEL 2: La Escalada (Ajustado para no levitar) ---
+    // --- NIVEL 2: La Escalada ---
     {
         platforms: [
             { x: 0, y: 400, w: 200, h: 40 },
@@ -107,7 +107,6 @@ const levels = [
             { x: 1100, y: 400, w: 100, h: 40 }
         ],
         enemies: [
-            // Rango reducido a 60 para asegurar que no se salgan
             { x: 375, y: 260, w: 60, h: 60, speed: 2, startX: 375, range: 60, dir: 1 }, 
             { x: 675, y: 180, w: 60, h: 60, speed: 2, startX: 675, range: 60, dir: 1 }
         ],
@@ -115,17 +114,18 @@ const levels = [
             { x: 900, y: 110, w: 30, h: 30, collected: false }
         ]
     },
-    // --- NIVEL 3: Islas Flotantes ---
+    // --- NIVEL 3: Islas Flotantes (CORREGIDO) ---
     {
         platforms: [
             { x: 0, y: 400, w: 150, h: 40 },
-            { x: 200, y: 400, w: 200, h: 20 }, 
+            { x: 200, y: 400, w: 200, h: 20 }, // Plataforma baja donde va el enemigo
             { x: 500, y: 300, w: 200, h: 20 }, 
             { x: 800, y: 200, w: 200, h: 20 }, 
             { x: 1100, y: 400, w: 100, h: 40 }
         ],
         enemies: [
-            { x: 700, y: 340, w: 60, h: 60, speed: 3, startX: 600, range: 80, dir: 1 }, 
+            // DEVUELTO AL INICIO: En x:300 (Plataforma 2). Altura y:340 para pisar suelo (400-60)
+            { x: 300, y: 340, w: 60, h: 60, speed: 2, startX: 250, range: 100, dir: 1 }, 
             { x: 900, y: 140, w: 60, h: 60, speed: 2, startX: 900, range: 50, dir: 1 }
         ],
         hearts: [
@@ -141,7 +141,6 @@ const levels = [
             { x: 1050, y: 400, w: 150, h: 40 }
         ],
         enemies: [
-            // Rango ajustado a 120
             { x: 350, y: 290, w: 60, h: 60, speed: 4, startX: 350, range: 120, dir: 1 }, 
             { x: 800, y: 190, w: 60, h: 60, speed: 4, startX: 800, range: 120, dir: 1 }
         ],
@@ -150,7 +149,7 @@ const levels = [
             { x: 800, y: 100, w: 30, h: 30, collected: false }
         ]
     },
-    // --- NIVEL 5: El Castillo Final ---
+    // --- NIVEL 5: El Castillo Final (CORREGIDO) ---
     {
         platforms: [
             { x: 0, y: 400, w: 200, h: 40 },
@@ -160,8 +159,9 @@ const levels = [
             { x: 700, y: 400, w: 500, h: 40 } 
         ],
         enemies: [
-            { x: 800, y: 340, w: 60, h: 60, speed: 2, startX: 800, range: 40, dir: 1 },
-            { x: 950, y: 340, w: 60, h: 60, speed: 2, startX: 950, range: 20, dir: 1 }
+            // REPARTIDOS: Uno en la plat 2 (x:300) y otro en plat 4 (x:600)
+            { x: 300, y: 240, w: 60, h: 60, speed: 2, startX: 250, range: 50, dir: 1 },
+            { x: 600, y: 240, w: 60, h: 60, speed: 2, startX: 550, range: 50, dir: 1 }
         ],
         hearts: []
     }
@@ -297,7 +297,8 @@ function loop() {
 
     // CASTILLO (Solo en Nivel 5)
     if (currentLevel === 4) { 
-        drawCastle(goal.x - 50, goal.y - 180); 
+        // CORREGIDO: Bajado (Y-130) para que la base toque el suelo (400)
+        drawCastle(goal.x - 50, goal.y - 130); 
     }
 
     // Corazones
@@ -321,7 +322,6 @@ function loop() {
     // Enemigos
     for (let en of enemies) {
         en.x += en.speed * en.dir;
-        // Lógica de patrulla estricta
         if (en.x > en.startX + en.range) en.dir = -1;
         if (en.x < en.startX - en.range) en.dir = 1;
 
@@ -526,7 +526,7 @@ function performDanceRoutine() {
     ctx.translate(-cameraX, 0);
     drawWorldScenery();
     
-    drawCastle(goal.x - 50, goal.y - 180);
+    drawCastle(goal.x - 50, goal.y - 130);
 
     let jumpOffset = Math.sin(frame * 0.15) * 20; 
     if (jumpOffset > 0) jumpOffset = 0; 
@@ -583,8 +583,10 @@ const songTitle = document.getElementById('song-title');
 const songArtist = document.getElementById('song-artist');
 const coverImg = document.getElementById('cover-img');
 
+// ELEMENTOS DE LA BARRA NUEVA Y VOLUMEN
 const progressContainer = document.getElementById('progress-container'); 
 const progressDot = document.getElementById('progress-dot'); 
+const volumeSlider = document.getElementById('volume-slider');
 
 function loadSong(song) {
     if(!songTitle) return;
@@ -622,6 +624,7 @@ function prevSong() {
     playBtn.innerText = "⏸️";
 }
 
+// LOGICA BARRA DE PROGRESO
 if(audioPlayer) {
     audioPlayer.addEventListener('timeupdate', () => {
         if(audioPlayer.duration && progressDot) {
@@ -632,8 +635,17 @@ if(audioPlayer) {
     audioPlayer.addEventListener('ended', nextSong);
 }
 
+// LOGICA DE VOLUMEN (NUEVO)
+if(volumeSlider) {
+    volumeSlider.addEventListener('input', (e) => {
+        audioPlayer.volume = e.target.value;
+    });
+}
+
+// LISTENERS BOTONES
 if(playBtn) playBtn.addEventListener('click', togglePlay);
 if(nextBtn) nextBtn.addEventListener('click', nextSong);
 if(prevBtn) prevBtn.addEventListener('click', prevSong);
 
+// Cargar primera canción
 loadSong(playlist[currentSongIndex]);
