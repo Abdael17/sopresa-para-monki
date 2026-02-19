@@ -84,17 +84,19 @@ let shootingStar = {
 let currentLevel = 0;
 
 // Definimos los niveles (Plataformas + Enemigos juntos)
+// --- SISTEMA DE NIVELES Y ENEMIGOS (CORREGIDO) ---
 const levels = [
     // --- NIVEL 1: El Inicio ---
     {
         platforms: [
-            { x: 0, y: 400, w: 800, h: 40 },   // Suelo base (Todo el ancho)
-            { x: 300, y: 280, w: 200, h: 20 }, // Plataforma media
-            { x: 600, y: 180, w: 150, h: 20 }  // Plataforma alta salida
+            { x: 0, y: 400, w: 800, h: 40 },   // Suelo
+            { x: 300, y: 280, w: 200, h: 20 }, // Plataforma 1
+            { x: 600, y: 180, w: 150, h: 20 }  // Plataforma 2
         ],
         enemies: [
-            { x: 400, y: 350, w: 40, h: 40, speed: 2 }, // Enemigo en el suelo
-            { x: 350, y: 230, w: 40, h: 40, speed: 2 }  // Enemigo en plataforma (ajustado altura)
+            // ¡Ahora tienen startX, range y dir!
+            { x: 400, y: 350, w: 40, h: 40, speed: 2, startX: 400, range: 100, dir: 1 }, 
+            { x: 350, y: 230, w: 40, h: 40, speed: 2, startX: 350, range: 50, dir: 1 }   
         ]
     },
 
@@ -108,8 +110,8 @@ const levels = [
             { x: 750, y: 400, w: 50, h: 40 }    // Meta final
         ],
         enemies: [
-            { x: 220, y: 250, w: 40, h: 40, speed: 3 }, // En el escalón 1
-            { x: 680, y: 250, w: 40, h: 40, speed: 1 }  // En el aterrizaje
+            { x: 220, y: 250, w: 40, h: 40, speed: 3, startX: 220, range: 80, dir: 1 }, 
+            { x: 680, y: 250, w: 40, h: 40, speed: 1, startX: 680, range: 40, dir: 1 }  
         ]
     }
 ];
@@ -645,6 +647,7 @@ audioPlayer.addEventListener('ended', nextSong); // Cuando acaba una, sigue la o
 // Cargar la primera canción al iniciar (sin reproducir aún)
 loadSong(playlist[currentSongIndex]);
 audioPlayer.volume = 0.5; // Volumen al 50%
+
 
 
 
