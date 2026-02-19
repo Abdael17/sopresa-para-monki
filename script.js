@@ -657,3 +657,26 @@ if(prevBtn) prevBtn.addEventListener('click', prevSong);
 
 // Cargar primera canción
 loadSong(playlist[currentSongIndex]);
+
+/* Contenedor de la barra (Línea gris estática) */
+#progress-container {
+    width: 100%;
+    height: 5px;
+    background-color: #555; /* Gris oscuro */
+    border-radius: 5px;
+    position: relative; /* Necesario para que el punto se mueva dentro */
+    margin-top: 15px;
+    cursor: pointer;
+}
+
+/* El punto que se mueve (Inicio izquierda -> Fin derecha) */
+#progress-dot {
+    width: 15px;
+    height: 15px;
+    background-color: #ff4d6d; /* Color rosado */
+    border-radius: 50%;
+    position: absolute;
+    top: -5px; /* Para centrarlo verticalmente */
+    left: 0%; /* Empieza a la izquierda */
+    transition: left 0.1s linear; /* Movimiento suave */
+}
