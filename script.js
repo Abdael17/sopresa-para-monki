@@ -85,33 +85,35 @@ let currentLevel = 0;
 
 // Definimos los niveles (Plataformas + Enemigos juntos)
 // --- SISTEMA DE NIVELES Y ENEMIGOS (CORREGIDO) ---
+// --- SISTEMA DE NIVELES Y ENEMIGOS (MEJORADO) ---
 const levels = [
-    // --- NIVEL 1: El Inicio ---
+    // --- NIVEL 1: El Inicio (Ahora con 3 saltos) ---
     {
         platforms: [
             { x: 0, y: 400, w: 800, h: 40 },   // Suelo
-            { x: 300, y: 280, w: 200, h: 20 }, // Plataforma 1
-            { x: 600, y: 180, w: 150, h: 20 }  // Plataforma 2
+            { x: 250, y: 300, w: 150, h: 20 }, // Plataforma 1
+            { x: 500, y: 220, w: 150, h: 20 }, // Plataforma 2
+            { x: 700, y: 150, w: 100, h: 20 }  // Plataforma Salida (Meta)
         ],
         enemies: [
-            // ¡Ahora tienen startX, range y dir!
-            { x: 400, y: 350, w: 40, h: 40, speed: 2, startX: 400, range: 100, dir: 1 }, 
-            { x: 350, y: 230, w: 40, h: 40, speed: 2, startX: 350, range: 50, dir: 1 }   
+            // Enemigos más grandes (60x60) y ajustados al suelo
+            { x: 400, y: 340, w: 60, h: 60, speed: 2, startX: 400, range: 100, dir: 1 }, 
+            { x: 280, y: 240, w: 50, h: 50, speed: 2, startX: 280, range: 50, dir: 1 }   
         ]
     },
 
-    // --- NIVEL 2: El Salto de Fe ---
+    // --- NIVEL 2: El Desafío ---
     {
         platforms: [
             { x: 0, y: 400, w: 150, h: 40 },    // Inicio
-            { x: 200, y: 300, w: 100, h: 20 },  // Escalón 1
-            { x: 400, y: 200, w: 100, h: 20 },  // Escalón 2
-            { x: 650, y: 300, w: 150, h: 20 },  // Aterrizaje
+            { x: 200, y: 300, w: 100, h: 20 },  
+            { x: 400, y: 200, w: 100, h: 20 },  
+            { x: 600, y: 300, w: 150, h: 20 },  
             { x: 750, y: 400, w: 50, h: 40 }    // Meta final
         ],
         enemies: [
-            { x: 220, y: 250, w: 40, h: 40, speed: 3, startX: 220, range: 80, dir: 1 }, 
-            { x: 680, y: 250, w: 40, h: 40, speed: 1, startX: 680, range: 40, dir: 1 }  
+            { x: 220, y: 240, w: 60, h: 60, speed: 3, startX: 220, range: 80, dir: 1 }, 
+            { x: 650, y: 240, w: 60, h: 60, speed: 1, startX: 650, range: 40, dir: 1 }  
         ]
     }
 ];
@@ -647,6 +649,7 @@ audioPlayer.addEventListener('ended', nextSong); // Cuando acaba una, sigue la o
 // Cargar la primera canción al iniciar (sin reproducir aún)
 loadSong(playlist[currentSongIndex]);
 audioPlayer.volume = 0.5; // Volumen al 50%
+
 
 
 
