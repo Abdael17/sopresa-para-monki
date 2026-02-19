@@ -119,26 +119,29 @@ let platforms = levels[currentLevel].platforms;
 let enemies = levels[currentLevel].enemies; // ¡Importante! Cargamos los enemigos del nivel
 // --- DETECTOR DE FINAL DE NIVEL ---
     
-    // Si el jugador llega al borde derecho (Meta)
-    if (player.x > canvas.width - 50) {
+// --- DETECTOR DE FINAL DE NIVEL (CORREGIDO) ---
+    
+    // Si el jugador llega al borde derecho
+    if (player.x > canvas.width - 20) {
         
-        // ¿Quedan niveles?
+        // Verificamos si quedan niveles
         if (currentLevel < levels.length - 1) {
-            // ¡Siguiente nivel! 🚀
-            currentLevel++;
-            platforms = levels[currentLevel]; // Carga el mapa nuevo
-            player.x = 50; // Te regresa al inicio (izquierda)
-            console.log("¡Nivel " + (currentLevel + 1) + " desbloqueado!");
+            currentLevel++; // Subir nivel
+            
+            // CARGAR TODO LO NUEVO
+            platforms = levels[currentLevel].platforms; // Nuevas plataformas
+            enemies = levels[currentLevel].enemies;     // Nuevos enemigos
+            
+            player.x = 20; // Regresar al jugador a la izquierda
+            
+            console.log("Nivel " + (currentLevel + 1));
             
         } else {
-            // ¡GANASTE EL JUEGO! 🏆
-            // Aquí puedes poner una alerta o detener el juego
-            if (!alert("¡TE ENCONTRE! ❤️ Mi monkilina")) {
-                 // Reiniciar al nivel 1 si acepta
-                 currentLevel = 0;
-                 platforms = levels[currentLevel];
-                 player.x = 50;
-            }
+            // FIN DEL JUEGO
+            gamerRunning = false;
+            alert("¡TE ENCONTRE! ❤️ Mi monkilina");
+            // Opcional: Reiniciar
+            // location.reload(); 
         }
     }
 
@@ -651,6 +654,7 @@ audioPlayer.addEventListener('ended', nextSong); // Cuando acaba una, sigue la o
 // Cargar la primera canción al iniciar (sin reproducir aún)
 loadSong(playlist[currentSongIndex]);
 audioPlayer.volume = 0.5; // Volumen al 50%
+
 
 
 
