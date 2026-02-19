@@ -490,7 +490,7 @@ function takeDamage() {
 
 function drawGameOverScreen() {
     ctx.setTransform(1, 0, 0, 1, 0, 0); 
-    ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
+    ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     
     ctx.fillStyle = "#ff4d6d";
@@ -662,6 +662,7 @@ if(prevBtn) prevBtn.addEventListener('click', prevSong);
 
 // Cargar primera canción
 loadSong(playlist[currentSongIndex]);
+
 
 
 
