@@ -126,7 +126,7 @@ let enemies = levels[currentLevel].enemies; // ¡Importante! Cargamos los enemig
 // --- DETECTOR DE FINAL DE NIVEL (MEJORADO) ---
     
     // CAMBIO: Ahora detecta si pasas el pixel 750 (antes de llegar al borde negro)
-    if (player.x > 700) {
+    if (player.x > 650) {
         
         // Verificamos si quedan niveles
         if (currentLevel < levels.length - 1) {
@@ -652,6 +652,7 @@ audioPlayer.addEventListener('ended', nextSong); // Cuando acaba una, sigue la o
 // Cargar la primera canción al iniciar (sin reproducir aún)
 loadSong(playlist[currentSongIndex]);
 audioPlayer.volume = 0.5; // Volumen al 50%
+
 
 
 
