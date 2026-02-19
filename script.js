@@ -383,7 +383,7 @@ function loop() {
         ctx.fillStyle = "#ff4d6d";
         ctx.font = "bold 20px 'VT323'";
         ctx.textAlign = "center";
-        ctx.fillText("¡Amor!", finalX + goal.width/2, finalY - 15);
+        ctx.fillText("¡Monaso!", finalX + goal.width/2, finalY - 15);
 
         if (!isDancing && player.x >= finalX - 60) {
             isDancing = true;
@@ -496,7 +496,7 @@ function drawGameOverScreen() {
     ctx.fillStyle = "#ff4d6d";
     ctx.textAlign = "center";
     ctx.font = "60px 'VT323'";
-    ctx.fillText("😢 GAME OVER", canvas.width/2, canvas.height/2 - 20);
+    ctx.fillText("!NO TE RINDAS 😿¡ AYUDAME A LLEGAR A MI MONITA ", canvas.width/2, canvas.height/2 - 20);
     
     ctx.fillStyle = "white";
     ctx.font = "30px 'VT323'";
@@ -565,7 +565,7 @@ function performDanceRoutine() {
     ctx.fillStyle = "#ff4d6d";
     ctx.textAlign = "center";
     ctx.font = "60px 'VT323'";
-    ctx.fillText("❤️ ¡TE ENCONTRÉ! ❤️", canvas.width/2, 180);
+    ctx.fillText("❤️ ¡TE ENCONTRÉ MI MONKILINA! ❤️", canvas.width/2, 180);
     
     ctx.fillStyle = "white";
     ctx.font = "30px 'VT323'";
@@ -662,3 +662,4 @@ if(prevBtn) prevBtn.addEventListener('click', prevSong);
 
 // Cargar primera canción
 loadSong(playlist[currentSongIndex]);
+
