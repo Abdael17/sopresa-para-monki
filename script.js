@@ -180,9 +180,17 @@ function startGame() {
 }
 
 function loop() {
-    if (!gameRunning) return;
+    if (!gamerRunning) return;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // --- PEGALO AQUÍ EXACTAMENTE 👇 ---
+    ctx.fillStyle = "white";
+    ctx.font = "30px Arial";
+    ctx.fillText("Posición X: " + Math.floor(player.x), 50, 100);
+    // ----------------------------------
+
+    // ... aquí sigue el resto de tu código (Modo Baile, etc.) ...
 
     // ==========================================
     // MODO BAILE (VICTORIA)
@@ -652,6 +660,7 @@ audioPlayer.addEventListener('ended', nextSong); // Cuando acaba una, sigue la o
 // Cargar la primera canción al iniciar (sin reproducir aún)
 loadSong(playlist[currentSongIndex]);
 audioPlayer.volume = 0.5; // Volumen al 50%
+
 
 
 
