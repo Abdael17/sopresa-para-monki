@@ -5,55 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Una Sorpresa Para Ti ❤️</title>
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
-   <link rel="stylesheet" href="style.css?v=614343434352524343242424">
+    <link rel="stylesheet" href="style.css?v=614343434352524343242424">
 </head>
 <body>
-<div class="background-photos-container">
-    <img src="assets/FOTO1.png" class="bg-photo p1" alt="Recuerdo 1">
-    <video 
-    src="assets/VIDEO2.mp4" 
-    class="bg-photo p2" 
-    autoplay 
-    loop 
-    muted 
-    playsinline>
-</video>
-    <img src="assets/FOTO3.png" class="bg-photo p3" alt="Recuerdo 3">
-    <video 
-    src="assets/VIDEO4.mp4" 
-    class="bg-photo p4" 
-    autoplay 
-    loop 
-    muted 
-    playsinline>
-</video>
-    <video 
-    src="assets/VIDEO5.mp4" 
-    class="bg-photo p5" 
-    autoplay 
-    loop 
-    muted 
-    playsinline>
-</video>
-    <img src="assets/FOTO10.png" class="bg-photo p6" alt="Recuerdo 6">
-    <img src="assets/FOTO7.png" class="bg-photo p7" alt="Recuerdo 7">
-    <video 
-    src="assets/VIDEO8.mp4" 
-    class="bg-photo p8" 
-    autoplay 
-    loop 
-    muted 
-    playsinline>
-</video>
-    <video 
-    src="assets/VIDEO9.mp4" 
-    class="bg-photo p9" 
-    autoplay 
-    loop 
-    muted 
-    playsinline>
-</video>
-</div>
+
+    <div class="background-photos-container">
+        <img src="assets/FOTO1.png" class="bg-photo p1" alt="Recuerdo 1">
+        
+        <video src="assets/VIDEO2.mp4" class="bg-photo p2" autoplay loop muted playsinline></video>
+        
+        <img src="assets/FOTO3.png" class="bg-photo p3" alt="Recuerdo 3">
+        
+        <video src="assets/VIDEO4.mp4" class="bg-photo p4" autoplay loop muted playsinline></video>
+        
+        <video src="assets/VIDEO5.mp4" class="bg-photo p5" autoplay loop muted playsinline></video>
+        
+        <img src="assets/FOTO10.png" class="bg-photo p6" alt="Recuerdo 6">
+        
+        <img src="assets/FOTO7.png" class="bg-photo p7" alt="Recuerdo 7">
+        
+        <video src="assets/VIDEO8.mp4" class="bg-photo p8" autoplay loop muted playsinline></video>
+        
+        <video src="assets/VIDEO9.mp4" class="bg-photo p9" autoplay loop muted playsinline></video>
+    </div>
+
     <div id="splash-screen">
         <div class="heart-beat">❤️</div>
         <h1>Tengo una sorpresa para ti...</h1>
@@ -64,165 +39,81 @@
         
         <section id="game-section">
             <h2>Nuestra Aventura</h2>
-            <canvas id="gameCanvas" width="800" height="450"></canvas>
+            <canvas id="gameCanvas" width="1200" height="450"></canvas>
             <p class="instruction">(Usa W-A-D para moverte) 🙊</p>
         </section>
-<div class="music-player">
-    
-<div class="song-info">
-    <img src="assets/Cover.jpg" id="cover-img" alt="Album Art">
-    <div class="song-text">
-        <h4 id="song-title">Song Title</h4>
-        <p id="song-artist">Artist</p>
-    </div>
-</div>
 
-<div class="controls">
-    <button class="ctrl-btn" id="prev-btn">⏮️</button>
-    <button class="ctrl-btn main-btn" id="play-btn">▶️</button>
-    <button class="ctrl-btn" id="next-btn">⏭️</button>
-</div>
+        <div class="music-player">
+            
+            <div class="song-info">
+                <img src="assets/Cover.jpg" alt="Portada" id="cover-img">
+                <div class="song-text">
+                    <h4 id="song-title">Cargando...</h4>
+                    <p id="song-artist">Para ti ❤️</p>
+                </div>
+            </div>
 
-<div id="progress-container">
-    <div id="progress-dot"></div>
-</div>
+            <div class="controls">
+                <button id="prev-btn" class="ctrl-btn">⏮️</button>
+                <button id="play-btn" class="ctrl-btn main-btn">▶️</button>
+                <button id="next-btn" class="ctrl-btn">⏭️</button>
+            </div>
 
-<div class="volume-container" style="display: flex; align-items: center; gap: 10px; margin-top: 10px; width: 100%;">
-    <span style="color: white; font-size: 15px;">🔊</span>
-    <input type="range" id="volume-slider" min="0" max="1" step="0.1" value="1" style="width: 100%; height: 3px; accent-color: #ff4d6d;">
-</div>
+            <div id="progress-container">
+                <div id="progress-dot"></div>
+            </div>
 
-    <audio id="audio-player"></audio>
-</div>
+            <div class="volume-container" style="display: flex; align-items: center; gap: 10px; margin-top: 10px; width: 100%;">
+                <span style="color: white; font-size: 15px;">🔊</span>
+                <input type="range" id="volume-slider" min="0" max="1" step="0.1" value="1" style="width: 100%; height: 3px; accent-color: #ff4d6d; cursor: pointer;">
+            </div>
+
+            <audio id="audio-player"></audio>
+        </div>
         
-    <div class="letter-section">
-        <h2>Para mi monki favorita</h2>
-        <p>
-            Hola amor, espero te guste mucho esto que he preparado para ti.
-            La verdad en estos aspectos creo yo que me sale más sencillo darte un presente,
-            me gusta hacer este estilo de cosas. He agregado varios detalles como canciones que me hacen recordar a ti,
-            un minijuego que espero te guste y fotos nuestras que nos representan o imagenes/ stickers que solemos utilizar 🙉
-            Quiero que sepas que te amo demasiado y que como puedes ver en el pequeño juego yo
-            sobrepasaré cada obstaculo que se me interponga para estár contigo. Ya falta poco para que tengamos 3 años juntos
-            y la verdad que no me arrepiento ni un segundo de estar contigo. Hemos aprendido muchas cosas
-            de uno al otro, hemos pasado por buenos y malos momentos pero siempre estando juntos. Logramos muchas cosas
-            como nuestro emprendimiento (BuffyShop) y siento que este proyecto que estamos haciendo tiene un gran futuro por delante.
-            Y un mayor proyecto que nuestro emprendimiento es nuestra relación que yo le veo un futuro pero muy largo, mil millones de años luz.
-            Uno de mis deseos son vivir contigo, hacer muchas actividades juntos, con mi primer sueldo pasear juntos o hacer algo que no hayamos
-            hecho antes, tengo tantas cosas por hacer y quiero que estes presente en ellas.
-            Espero te guste este presente que lo hice con todo el cariño de mi corazón y te amo demasiado.
-        </p>
-        <p>
-            Con amor, Abdael.
-        </p>
-    </div>
+        <div class="letter-section">
+            <h2>Para mi monki favorita</h2>
+            <p>
+                Hola amor, espero te guste mucho esto que he preparado para ti.
+                La verdad en estos aspectos creo yo que me sale más sencillo darte un presente,
+                me gusta hacer este estilo de cosas. He agregado varios detalles como canciones que me hacen recordar a ti,
+                un minijuego que espero te guste y fotos nuestras que nos representan o imagenes/ stickers que solemos utilizar 🙉
+                Quiero que sepas que te amo demasiado y que como puedes ver en el pequeño juego yo
+                sobrepasaré cada obstaculo que se me interponga para estár contigo. Ya falta poco para que tengamos 3 años juntos
+                y la verdad que no me arrepiento ni un segundo de estar contigo. Hemos aprendido muchas cosas
+                de uno al otro, hemos pasado por buenos y malos momentos pero siempre estando juntos. Logramos muchas cosas
+                como nuestro emprendimiento (BuffyShop) y siento que este proyecto que estamos haciendo tiene un gran futuro por delante.
+                Y un mayor proyecto que nuestro emprendimiento es nuestra relación que yo le veo un futuro pero muy largo, mil millones de años luz.
+                Uno de mis deseos son vivir contigo, hacer muchas actividades juntos, con mi primer sueldo pasear juntos o hacer algo que no hayamos
+                hecho antes, tengo tantas cosas por hacer y quiero que estes presente en ellas.
+                Espero te guste este presente que lo hice con todo el cariño de mi corazón y te amo demasiado.
+            </p>
+            <p>
+                Con amor, Abdael.
+            </p>
+        </div>
 
-    <h2>Nuestros Momentos</h2>
-    <div class="photo-gallery">
-        <div class="photo-frame"><img src="assets/Nosotros.jpg" class="focus-right-extreme" alt="Foto 1"></div>
-        <div class="photo-frame"> <video src="assets/VIDEO6.mp4" alt="Foto 2" autoplay loop muted playsinline></div>
-        <div class="photo-frame"><img src="assets/Nosotros1.jpg" class="focus-right-extreme" alt="Foto 3"></div>
-        <div class="photo-frame"><img src="assets/Nosotros2.png" class="focus-right" alt="Foto 4"></div>
-        <div class="photo-frame"><img src="assets/Nosotros3.jpg" alt="Foto 5"></div>
-        <div class="photo-frame"><img src="assets/Nosotros4.png" alt="Foto 6"></div>
-        <div class="photo-frame"><img src="assets/Nosotros5.jpg" alt="Foto 7"></div>
-        <div class="photo-frame"><img src="assets/Nosotros6.png" alt="Foto 8"></div>
-        <div class="photo-frame"><img src="assets/Nosotros7.png" alt="Foto 9"></div>
-        <div class="photo-frame"><img src="assets/Nosotros8.png" alt="Foto 10"></div>
-        <div class="photo-frame"><img src="assets/Nosotros9.png" alt="Foto 11"></div>
-        <div class="photo-frame"><img src="assets/Nosotros10.png" alt="Foto 12"></div>
-    </div>
+        <h2>Nuestros Momentos</h2>
+        <div class="photo-gallery">
+            <div class="photo-frame"><img src="assets/Nosotros.jpg" class="focus-right-extreme" alt="Foto 1"></div>
+            <div class="photo-frame"><video src="assets/VIDEO6.mp4" alt="Foto 2" autoplay loop muted playsinline></video></div>
+            <div class="photo-frame"><img src="assets/Nosotros1.jpg" class="focus-right-extreme" alt="Foto 3"></div>
+            <div class="photo-frame"><img src="assets/Nosotros2.png" class="focus-right" alt="Foto 4"></div>
+            <div class="photo-frame"><img src="assets/Nosotros3.jpg" alt="Foto 5"></div>
+            <div class="photo-frame"><img src="assets/Nosotros4.png" alt="Foto 6"></div>
+            <div class="photo-frame"><img src="assets/Nosotros5.jpg" alt="Foto 7"></div>
+            <div class="photo-frame"><img src="assets/Nosotros6.png" alt="Foto 8"></div>
+            <div class="photo-frame"><img src="assets/Nosotros7.png" alt="Foto 9"></div>
+            <div class="photo-frame"><img src="assets/Nosotros8.png" alt="Foto 10"></div>
+            <div class="photo-frame"><img src="assets/Nosotros9.png" alt="Foto 11"></div>
+            <div class="photo-frame"><img src="assets/Nosotros10.png" alt="Foto 12"></div>
+        </div>
 
-    <footer>
-        Hecho con amor ❤️ para ti mi Monki mari
-    </footer>
-</div>
+        <footer>
+            Hecho con amor ❤️ para ti mi Monki mari
+        </footer>
+    </div>
 
     <script src="script.js?v=3244325235235353325183"></script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
