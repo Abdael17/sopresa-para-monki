@@ -423,6 +423,34 @@ white-space: nowrap !important;
     object-position: center top !important;
 }
 
+/* =========================================
+   NUEVA BARRA DE PROGRESO (LINEA + PUNTO)
+   Pega esto al final de tu style.css
+   ========================================= */
+
+#progress-container {
+    width: 100%;
+    height: 5px;
+    background-color: rgba(255, 255, 255, 0.2); /* Línea de fondo grisácea */
+    border-radius: 5px;
+    position: relative; /* Necesario para que el punto se mueva dentro */
+    margin-top: 15px;
+    cursor: pointer;
+}
+
+#progress-dot {
+    width: 15px;
+    height: 15px;
+    background-color: #ff4d6d; /* Color rosado del punto */
+    border-radius: 50%; /* Lo hace redondo */
+    position: absolute;
+    top: -5px; /* Lo centra verticalmente sobre la línea */
+    left: 0%; /* Empieza a la izquierda */
+    transition: left 0.1s linear; /* Movimiento suave */
+    box-shadow: 0 0 10px rgba(255, 77, 109, 0.8); /* Un poco de brillo */
+    pointer-events: none; /* Para que el click pase a la barra */
+}
+
 
 
 
