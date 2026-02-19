@@ -123,30 +123,33 @@ let platforms = levels[currentLevel].platforms;
 let enemies = levels[currentLevel].enemies; // ¡Importante! Cargamos los enemigos del nivel
 // --- DETECTOR DE FINAL DE NIVEL ---
     
-// --- DETECTOR DE FINAL DE NIVEL (CORREGIDO) ---
+// --- DETECTOR DE FINAL DE NIVEL (MEJORADO) ---
     
-    // Si el jugador llega al borde derecho
-    if (player.x > canvas.width - 20) {
+    // CAMBIO: Ahora detecta si pasas el pixel 750 (antes de llegar al borde negro)
+    if (player.x > 750) {
         
         // Verificamos si quedan niveles
         if (currentLevel < levels.length - 1) {
             currentLevel++; // Subir nivel
             
             // CARGAR TODO LO NUEVO
-            platforms = levels[currentLevel].platforms; // Nuevas plataformas
-            enemies = levels[currentLevel].enemies;     // Nuevos enemigos
+            platforms = levels[currentLevel].platforms; 
+            enemies = levels[currentLevel].enemies;     
             
             player.x = 20; // Regresar al jugador a la izquierda
             
-            console.log("Nivel " + (currentLevel + 1));
+            console.log("¡Nivel " + (currentLevel + 1) + " Cargado!");
             
         } else {
             // FIN DEL JUEGO
             gamerRunning = false;
-            alert("¡TE ENCONTRE! ❤️ Mi monkilina");
-            // Opcional: Reiniciar
-            // location.reload(); 
-        }}
+            // Un pequeño delay para que no sea tan brusco
+            setTimeout(() => {
+                alert("¡TE AMO! ❤️ Has completado nuestra aventura.");
+                location.reload(); // Reinicia el juego
+            }, 100);
+        }
+    }
 
 // LISTENERS
 window.addEventListener('keydown', (e) => {
@@ -649,6 +652,7 @@ audioPlayer.addEventListener('ended', nextSong); // Cuando acaba una, sigue la o
 // Cargar la primera canción al iniciar (sin reproducir aún)
 loadSong(playlist[currentSongIndex]);
 audioPlayer.volume = 0.5; // Volumen al 50%
+
 
 
 
