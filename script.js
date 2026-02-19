@@ -496,9 +496,7 @@ function drawGameOverScreen() {
     ctx.fillStyle = "#ff4d6d";
     ctx.textAlign = "center";
     ctx.font = "60px 'VT323'";
-    ctx.fillText("!NO TE RINDAS 😿¡ 
-                 AYUDAME A LLEGAR A MI MONITA "
-        , canvas.width/2, canvas.height/2 - 20);
+    ctx.fillText("!NO TE RINDAS 😿¡ AYUDAME A LLEGAR A MI MONITA ", canvas.width/2, canvas.height/2 - 20);
     
     ctx.fillStyle = "white";
     ctx.font = "30px 'VT323'";
@@ -664,5 +662,6 @@ if(prevBtn) prevBtn.addEventListener('click', prevSong);
 
 // Cargar primera canción
 loadSong(playlist[currentSongIndex]);
+
 
 
