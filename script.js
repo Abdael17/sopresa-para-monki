@@ -1,5 +1,5 @@
 // ==========================================
-// CÓDIGO FINAL - VERSIÓN CASTILLO Y AJUSTES
+// CÓDIGO FINAL - SCRIPT.JS (CORREGIDO)
 // ==========================================
 
 // --- CONFIGURACIÓN ---
@@ -77,7 +77,7 @@ for (let i = 0; i < 300; i++) {
 let shootingStar = { x: 0, y: 0, active: false, speedX: 0, speedY: 0 };
 
 // ==========================================
-// SISTEMA DE 5 NIVELES (AJUSTADO)
+// SISTEMA DE 5 NIVELES
 // ==========================================
 let currentLevel = 0;
 
@@ -91,32 +91,31 @@ const levels = [
             { x: 900, y: 150, w: 150, h: 20 }
         ],
         enemies: [
-            // startX: 500, range: 80 (Se mueve de 420 a 580)
             { x: 500, y: 340, w: 60, h: 60, speed: 2, startX: 500, range: 80, dir: 1 }
         ],
         hearts: [
             { x: 650, y: 170, w: 30, h: 30, collected: false }
         ]
     },
-    // --- NIVEL 2: La Escalada (Enemigos Centrados) ---
+    // --- NIVEL 2: La Escalada (Ajustado para no levitar) ---
     {
         platforms: [
             { x: 0, y: 400, w: 200, h: 40 },
-            { x: 250, y: 320, w: 250, h: 20 }, // Plat: 250 a 500
-            { x: 550, y: 240, w: 250, h: 20 }, // Plat: 550 a 800
+            { x: 250, y: 320, w: 250, h: 20 },
+            { x: 550, y: 240, w: 250, h: 20 },
             { x: 850, y: 160, w: 200, h: 20 },
             { x: 1100, y: 400, w: 100, h: 40 }
         ],
         enemies: [
-            // Rango ajustado para no caerse (Plataforma ancho 250 -> Rango 80 es seguro)
-            { x: 375, y: 260, w: 60, h: 60, speed: 2, startX: 375, range: 80, dir: 1 }, 
-            { x: 675, y: 180, w: 60, h: 60, speed: 2, startX: 675, range: 80, dir: 1 }
+            // Rango reducido a 60 para asegurar que no se salgan
+            { x: 375, y: 260, w: 60, h: 60, speed: 2, startX: 375, range: 60, dir: 1 }, 
+            { x: 675, y: 180, w: 60, h: 60, speed: 2, startX: 675, range: 60, dir: 1 }
         ],
         hearts: [
             { x: 900, y: 110, w: 30, h: 30, collected: false }
         ]
     },
-    // --- NIVEL 3: Islas Flotantes (Spawn Arreglado) ---
+    // --- NIVEL 3: Islas Flotantes ---
     {
         platforms: [
             { x: 0, y: 400, w: 150, h: 40 },
@@ -126,9 +125,8 @@ const levels = [
             { x: 1100, y: 400, w: 100, h: 40 }
         ],
         enemies: [
-            // ¡MOVIDO! Ahora está en x:700 (lejos del spawn x:20)
-            { x: 700, y: 340, w: 60, h: 60, speed: 3, startX: 600, range: 100, dir: 1 }, 
-            { x: 900, y: 140, w: 60, h: 60, speed: 2, startX: 900, range: 60, dir: 1 }
+            { x: 700, y: 340, w: 60, h: 60, speed: 3, startX: 600, range: 80, dir: 1 }, 
+            { x: 900, y: 140, w: 60, h: 60, speed: 2, startX: 900, range: 50, dir: 1 }
         ],
         hearts: [
             { x: 550, y: 250, w: 30, h: 30, collected: false }
@@ -143,28 +141,27 @@ const levels = [
             { x: 1050, y: 400, w: 150, h: 40 }
         ],
         enemies: [
-            // Rango 150 en plataforma de 400 (Seguro)
-            { x: 350, y: 290, w: 60, h: 60, speed: 4, startX: 350, range: 150, dir: 1 }, 
-            { x: 800, y: 190, w: 60, h: 60, speed: 4, startX: 800, range: 150, dir: 1 }
+            // Rango ajustado a 120
+            { x: 350, y: 290, w: 60, h: 60, speed: 4, startX: 350, range: 120, dir: 1 }, 
+            { x: 800, y: 190, w: 60, h: 60, speed: 4, startX: 800, range: 120, dir: 1 }
         ],
         hearts: [
             { x: 500, y: 200, w: 30, h: 30, collected: false },
             { x: 800, y: 100, w: 30, h: 30, collected: false }
         ]
     },
-    // --- NIVEL 5: El Castillo Final (Con Enemigos) ---
+    // --- NIVEL 5: El Castillo Final ---
     {
         platforms: [
             { x: 0, y: 400, w: 200, h: 40 },
             { x: 250, y: 300, w: 100, h: 20 },
             { x: 400, y: 200, w: 100, h: 20 },
             { x: 550, y: 300, w: 100, h: 20 },
-            { x: 700, y: 400, w: 500, h: 40 } // Suelo del castillo
+            { x: 700, y: 400, w: 500, h: 40 } 
         ],
         enemies: [
-            // Guardias del castillo
-            { x: 800, y: 340, w: 60, h: 60, speed: 2, startX: 800, range: 50, dir: 1 },
-            { x: 950, y: 340, w: 60, h: 60, speed: 2, startX: 950, range: 30, dir: 1 }
+            { x: 800, y: 340, w: 60, h: 60, speed: 2, startX: 800, range: 40, dir: 1 },
+            { x: 950, y: 340, w: 60, h: 60, speed: 2, startX: 950, range: 20, dir: 1 }
         ],
         hearts: []
     }
@@ -298,9 +295,9 @@ function loop() {
     ctx.translate(-cameraX, 0); 
     drawWorldScenery(); 
 
-    // ** NUEVO: DIBUJAR CASTILLO (Solo en Nivel 5) **
-    if (currentLevel === 4) { // Array empieza en 0, así que 4 es el nivel 5
-        drawCastle(goal.x - 50, goal.y - 180); // Detrás de ella
+    // CASTILLO (Solo en Nivel 5)
+    if (currentLevel === 4) { 
+        drawCastle(goal.x - 50, goal.y - 180); 
     }
 
     // Corazones
@@ -370,7 +367,7 @@ function loop() {
         }
     }
 
-    // META (Ella)
+    // META
     if (currentLevel === levels.length - 1) {
         let finalX = 1000; 
         let finalY = 400 - BASE_HEIGHT;
@@ -402,28 +399,20 @@ function loop() {
 // ==========================================
 
 function drawCastle(x, y) {
-    // Función simple para dibujar un castillo de fondo
-    ctx.fillStyle = "#2c3e50"; // Gris oscuro azulado
-    // Torre Izquierda
+    ctx.fillStyle = "#2c3e50"; 
     ctx.fillRect(x, y, 60, 200);
-    // Torre Derecha
     ctx.fillRect(x + 140, y, 60, 200);
-    // Bloque Central
     ctx.fillRect(x + 40, y + 60, 120, 140);
-    // Puerta
-    ctx.fillStyle = "#1a252f"; // Más oscuro
+    ctx.fillStyle = "#1a252f"; 
     ctx.beginPath();
-    ctx.arc(x + 100, y + 200, 40, Math.PI, 0); // Arco
+    ctx.arc(x + 100, y + 200, 40, Math.PI, 0); 
     ctx.fill();
-    // Almenas (cuadraditos arriba)
     ctx.fillStyle = "#2c3e50";
     ctx.fillRect(x, y - 20, 20, 20);
     ctx.fillRect(x + 40, y - 20, 20, 20);
     ctx.fillRect(x + 140, y - 20, 20, 20);
     ctx.fillRect(x + 180, y - 20, 20, 20);
-    
-    // Banderas
-    ctx.fillStyle = "#e74c3c"; // Roja
+    ctx.fillStyle = "#e74c3c"; 
     ctx.beginPath();
     ctx.moveTo(x + 10, y - 20);
     ctx.lineTo(x + 10, y - 50);
@@ -514,13 +503,11 @@ function restartGame() {
     isDancing = false;
     isGameOver = false;
     
-    // REINICIO TOTAL
     currentLevel = 0;
     platforms = levels[currentLevel].platforms;
     enemies = levels[currentLevel].enemies;
     levelHearts = levels[currentLevel].hearts;
 
-    // RESTAURAR CORAZONES
     levels.forEach(level => {
         if(level.hearts) {
             level.hearts.forEach(h => h.collected = false);
@@ -539,7 +526,6 @@ function performDanceRoutine() {
     ctx.translate(-cameraX, 0);
     drawWorldScenery();
     
-    // Dibujar castillo durante el baile también
     drawCastle(goal.x - 50, goal.y - 180);
 
     let jumpOffset = Math.sin(frame * 0.15) * 20; 
@@ -574,7 +560,7 @@ function performDanceRoutine() {
 }
 
 // ==========================================
-// REPRODUCTOR DE MÚSICA (CORREGIDO)
+// REPRODUCTOR DE MÚSICA
 // ==========================================
 
 const playlist = [
@@ -597,9 +583,8 @@ const songTitle = document.getElementById('song-title');
 const songArtist = document.getElementById('song-artist');
 const coverImg = document.getElementById('cover-img');
 
-// Referencias a la barra de progreso
-const progressContainer = document.getElementById('progress-container'); // La barra gris
-const progressDot = document.getElementById('progress-dot'); // El punto que se mueve
+const progressContainer = document.getElementById('progress-container'); 
+const progressDot = document.getElementById('progress-dot'); 
 
 function loadSong(song) {
     if(!songTitle) return;
@@ -637,46 +622,18 @@ function prevSong() {
     playBtn.innerText = "⏸️";
 }
 
-// LÓGICA DE LA BARRA DE MÚSICA
 if(audioPlayer) {
     audioPlayer.addEventListener('timeupdate', () => {
         if(audioPlayer.duration && progressDot) {
-            // Calculamos porcentaje
             const percent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
-            // Movemos SOLO el punto (left)
             progressDot.style.left = percent + '%';
         }
     });
     audioPlayer.addEventListener('ended', nextSong);
 }
 
-// Listeners
 if(playBtn) playBtn.addEventListener('click', togglePlay);
 if(nextBtn) nextBtn.addEventListener('click', nextSong);
 if(prevBtn) prevBtn.addEventListener('click', prevSong);
 
-// Cargar primera canción
 loadSong(playlist[currentSongIndex]);
-
-/* Contenedor de la barra (Línea gris estática) */
-#progress-container {
-    width: 100%;
-    height: 5px;
-    background-color: #555; /* Gris oscuro */
-    border-radius: 5px;
-    position: relative; /* Necesario para que el punto se mueva dentro */
-    margin-top: 15px;
-    cursor: pointer;
-}
-
-/* El punto que se mueve (Inicio izquierda -> Fin derecha) */
-#progress-dot {
-    width: 15px;
-    height: 15px;
-    background-color: #ff4d6d; /* Color rosado */
-    border-radius: 50%;
-    position: absolute;
-    top: -5px; /* Para centrarlo verticalmente */
-    left: 0%; /* Empieza a la izquierda */
-    transition: left 0.1s linear; /* Movimiento suave */
-}
