@@ -143,15 +143,6 @@ let enemies = levels[currentLevel].enemies; // ¡Importante! Cargamos los enemig
             // Opcional: Reiniciar
             // location.reload(); 
         }
-    }
-
-// --- ENEMIGOS ---
-let enemies = [
-    { x: 500, y: GROUND_Y - 60, w: 60, h: 60, startX: 500, range: 100, speed: 1, dir: 1 },
-    { x: 1100, y: GROUND_Y - 240, w: 60, h: 60, startX: 1100, range: 150, speed: 2, dir: 1 },
-    { x: 1800, y: GROUND_Y - 60, w: 60, h: 60, startX: 1800, range: 200, speed: 2, dir: 1 },
-    { x: 2400, y: GROUND_Y - 60, w: 60, h: 60, startX: 2400, range: 100, speed: 1, dir: -1 }
-];
 
 // LISTENERS
 window.addEventListener('keydown', (e) => {
@@ -654,6 +645,7 @@ audioPlayer.addEventListener('ended', nextSong); // Cuando acaba una, sigue la o
 // Cargar la primera canción al iniciar (sin reproducir aún)
 loadSong(playlist[currentSongIndex]);
 audioPlayer.volume = 0.5; // Volumen al 50%
+
 
 
 
