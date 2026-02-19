@@ -142,7 +142,7 @@ let enemies = levels[currentLevel].enemies; // ¡Importante! Cargamos los enemig
             alert("¡TE ENCONTRE! ❤️ Mi monkilina");
             // Opcional: Reiniciar
             // location.reload(); 
-        }}}
+        }}
 
 // LISTENERS
 window.addEventListener('keydown', (e) => {
@@ -645,6 +645,7 @@ audioPlayer.addEventListener('ended', nextSong); // Cuando acaba una, sigue la o
 // Cargar la primera canción al iniciar (sin reproducir aún)
 loadSong(playlist[currentSongIndex]);
 audioPlayer.volume = 0.5; // Volumen al 50%
+
 
 
 
