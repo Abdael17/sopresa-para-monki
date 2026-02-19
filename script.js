@@ -80,31 +80,43 @@ let shootingStar = {
     speedY: 0
 };
 
-// --- PLATAFORMAS ---
-// --- SISTEMA DE NIVELES ---
-let currentLevel = 0; // Empezamos en el nivel 0
+// --- SISTEMA DE NIVELES Y ENEMIGOS ---
+let currentLevel = 0;
 
-// Aquí diseñamos tus mapas. (Fíjate que uso 'w' y 'h' como en tu código)
+// Definimos los niveles (Plataformas + Enemigos juntos)
 const levels = [
-    // --- NIVEL 1: El comienzo ---
-    [
-        { x: 400, y: GROUND_Y - 80, w: 150, h: 20 },
-        { x: 700, y: GROUND_Y - 160, w: 150, h: 20 },
-        { x: 1000, y: GROUND_Y - 240, w: 200, h: 20 } 
-    ],
-    
-    // --- NIVEL 2: Más difícil ---
-    [
-        { x: 200, y: GROUND_Y - 100, w: 100, h: 20 },
-        { x: 500, y: GROUND_Y - 250, w: 100, h: 20 }, /* Salto alto */
-        { x: 800, y: GROUND_Y - 150, w: 100, h: 20 },
-        { x: 1100, y: GROUND_Y - 300, w: 100, h: 20 } /* La cima */
-    ]
+    // --- NIVEL 1: El Inicio ---
+    {
+        platforms: [
+            { x: 0, y: 400, w: 800, h: 40 },   // Suelo base (Todo el ancho)
+            { x: 300, y: 280, w: 200, h: 20 }, // Plataforma media
+            { x: 600, y: 180, w: 150, h: 20 }  // Plataforma alta salida
+        ],
+        enemies: [
+            { x: 400, y: 350, w: 40, h: 40, speed: 2 }, // Enemigo en el suelo
+            { x: 350, y: 230, w: 40, h: 40, speed: 2 }  // Enemigo en plataforma (ajustado altura)
+        ]
+    },
+
+    // --- NIVEL 2: El Salto de Fe ---
+    {
+        platforms: [
+            { x: 0, y: 400, w: 150, h: 40 },    // Inicio
+            { x: 200, y: 300, w: 100, h: 20 },  // Escalón 1
+            { x: 400, y: 200, w: 100, h: 20 },  // Escalón 2
+            { x: 650, y: 300, w: 150, h: 20 },  // Aterrizaje
+            { x: 750, y: 400, w: 50, h: 40 }    // Meta final
+        ],
+        enemies: [
+            { x: 220, y: 250, w: 40, h: 40, speed: 3 }, // En el escalón 1
+            { x: 680, y: 250, w: 40, h: 40, speed: 1 }  // En el aterrizaje
+        ]
+    }
 ];
 
-// Cargamos el primer nivel en la variable que usa el juego
-let platforms = levels[currentLevel];
-
+// INICIALIZAR EL JUEGO CON EL NIVEL 0
+let platforms = levels[currentLevel].platforms;
+let enemies = levels[currentLevel].enemies; // ¡Importante! Cargamos los enemigos del nivel
 // --- DETECTOR DE FINAL DE NIVEL ---
     
     // Si el jugador llega al borde derecho (Meta)
@@ -639,6 +651,7 @@ audioPlayer.addEventListener('ended', nextSong); // Cuando acaba una, sigue la o
 // Cargar la primera canción al iniciar (sin reproducir aún)
 loadSong(playlist[currentSongIndex]);
 audioPlayer.volume = 0.5; // Volumen al 50%
+
 
 
 
